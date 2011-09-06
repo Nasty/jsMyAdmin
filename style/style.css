@@ -9,13 +9,15 @@
 }
 
 #wrapper {
-	width: 980px;
+	/*width: 980px;*/
 	margin: 10px auto;
 	border: 1px solid black;
 }
 
 #selector {
 	 float: left;
+	 width: 220px;
+	 position: fixed;
 }
 
 #selector ul {
@@ -38,19 +40,26 @@
 }
 
 #content {
-	width: 749px;
-	height: 500px;
+	/*width: 749px;*/
+	min-height: 520px;
 	overflow-y: scroll;
-	float: right;
+	/*float: right;*/
 	padding: 10px;
+	margin-left:220px;
 }
 
 #content table {
 	border-collapse: collapse;
+	width: 100%;
+}
+
+#content table th {
+	background: #D3DCE3;
+	border: 1px solid #fff;
 }
 
 #content thead td {
-	padding: 2px 5px;
+  padding: 2px 5px;
   font-weight: bold;
   border: 1px solid #fff;
 }

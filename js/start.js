@@ -49,7 +49,7 @@ $(document).ready(function()
 	    	}
 	    	
 	    	
-	    	$('#selector li').bind('click', function()
+	    	$('#selector #databases li').bind('click', function()
 	    	{
 	    		selectedDb = this.id;
 	    		$.ajax(
@@ -71,7 +71,7 @@ $(document).ready(function()
 
 	    				var datas = jQuery.parseJSON(data);
 	    				
-	    				$('#content').html(datas.html);
+	    				$('#content').html('<h3>' + selectedDb + '</h3>' + datas.html);
 	    				$('#content thead').html(datas.tableHead);
 	    				
 	    				var tables = datas.data; 
@@ -80,7 +80,7 @@ $(document).ready(function()
 	    				
 	    		    	for(i in tables)
 	    		    	{
-	    		    		$('#selector #tables').append('<li id="' + tables[i].name + '">' + tables[i].name + '</li>');
+	    		    		$('#selector #tables').append('<li id="' + tables[i].name + '" data-db="' + selectedDb + '">' + tables[i].name + '</li>');
 	    		    		
 	    		    		tableRow = 1 - tableRow;
 	    		    		
@@ -103,10 +103,105 @@ $(document).ready(function()
 
 	    		});
 	    	});
+			
+	    	$('#selector #tables li').live('click', function()
+	    	{
+	    		selectedDb = this.getAttribute('data-db');
+				selectedTable = this.id;
+				$('#selector #tables li').css('fontWeight', 'normal');
+				$(this).css('fontWeight', 'bold');
+	    		$.ajax(
+	    		{
+	    			url: "selecttable.php",
+	    			global: false,
+	    			type: "POST",
+	    			data: {db: selectedDb, table: selectedTable},
+	    			async:true,
+	    			success: function(data)
+	    			{
+	    				window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable);
+	    				$('#content table').remove();
+
+	    				$('#content').hide(0);
+
+	    				var datas = jQuery.parseJSON(data);
+	    				
+	    				$('#content').html('<h3>' + selectedDb + ' &gt; ' + selectedTable + ' &gt; <a href="#" id="showTable" data-db="' + selectedDb + '" data-table="' + selectedTable + '">[show table]</a></h3>' + datas.html);
+	    				$('#content thead').html(datas.tableHead);
+	    				
+	    				var tables = datas.data; 
+	    				
+	    				var tableRow = 0;
+	    				
+	    		    	for(i in tables)
+	    		    	{
+	    		    		tableRow = 1 - tableRow;
+	    		    		
+	    		    		$('#contentBody').append(
+	    		    				'<tr class="tableRow' + tableRow + '">' + 
+									'<td><input type="checkbox" id="checkbox_row_' + tableRow + '" value="' + tables[i].field  + '" /></td>' +
+	    		    				'<td data-size="' + tables[i].field + '">' + tables[i].field  + '</td>' +
+	    		    				'<td data-size="' + tables[i].type + '">' + tables[i].type  + '</td>' + 
+	    		    				'<td data-size="' + tables[i].collation + '">' + tables[i].collation  + '</td>' + 
+	    		    				'<td data-size="' + tables[i].attribute + '">' + tables[i].attribute  + '</td>' + 
+									'<td data-size="' + tables[i].null + '">' + tables[i].null + '</td>' + 
+									'<td data-size="' + tables[i].default + '">' + tables[i].default + '</td>' + 
+	    		    				'<td data-size="' + tables[i].extra + '">' + tables[i].extra  + '</td>' + 
+									'<td data-size=""></td>' + 
+	    		    				'</tr>'
+	    		    		);
+	    		    	}
+	    		    	
+	    		    	$('#databaseHeader').next().hide(animationSpeed);
+	    		    	$('#tableHeader').next().show(animationSpeed);
+						$('.tablesort').tablesorter({textExtraction: mySort}); 
+						$('#content').fadeIn(animationSpeed);
+	    			}
+
+	    		});
+	    	});
+			
+			$('#showTable').live('click', function(e){
+				$.ajax({
+					url: 'showtable.php',
+					type: "POST",
+					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table')},
+					success: function(msg)
+					{
+						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
+						var tableRow = 0;
+						var th = '';
+						var tableBody = '';
+						$('#content table').remove();
+						$('#content').append('<table class="tablesort"></table>');
+						var tbody = $('<tbody id="contentBody"></tbody>');
+						$(msg).each(function(i,j){
+							tableBody = '';
+							th = '';
+							$.each(j, function(key,value)
+							{
+								th += '<th>' + key + '</th>';
+								tableRow = 1 - tableRow;
+								tableBody += '<td data-size="' + value + '">' + value + '</td>';
+							})
+							tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
+						})
+						$('#content table').append('<tr>' + th + '</tr>').append(tbody);
+					}
+				})
+				
+				e.preventDefault();
+			})
+			
 	    	
 	    	if(trigger != null)
 	    	{
-	    		$('#databases #' + trigger).trigger('click');
+				$('#databases #' + trigger.db).trigger('click');
+				//needs work...
+				if (trigger.table != null)
+				{
+					$('#tables #' + trigger.table).trigger('click');
+				}
 	    	}
 	    }
 	});

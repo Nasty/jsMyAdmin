@@ -16,8 +16,21 @@
 	  if(isset($_GET['db']))
 	  {
 	  	?>
-  		var trigger = '<?=$_GET['db']?>';
+  		var trigger = {db:'<?=$_GET['db']?>',
+		<?php 
+		if (isset($_GET['table']))
+		{
+		?>
+			table: '<?=$_GET['table']?>'
+		}
 	  	<?php
+		} else
+		{
+		?>
+			table: null
+		}
+		<?php
+		}
 	  }
 	  else
 	  {
@@ -43,6 +56,7 @@
       </div>
     </div>
     <div id="content">
+		<h3 id="path"></h3>
 
     </div>
     <div class="clearDiv"><!--  --></div>

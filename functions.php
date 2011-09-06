@@ -8,6 +8,7 @@ function ConnectDb()
 	{
 	    die('keine Verbindung möglich: ' . mysql_error());
 	}
+	return $link;
 }
 
 function MakeSize($size)
