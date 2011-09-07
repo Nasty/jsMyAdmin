@@ -162,6 +162,8 @@ $(document).ready(function()
 	    	});
 			
 			$('#showTable').live('click', function(e){
+				var selectedDb = this.getAttribute('data-db');
+				var selectedTable = this.getAttribute('data-table');
 				$.ajax({
 					url: 'showtable.php',
 					type: "POST",
@@ -175,7 +177,7 @@ $(document).ready(function()
 						$('#content table').remove();
 						$('#content').append('<table class="tablesort"></table>');
 						var tbody = $('<tbody id="contentBody"></tbody>');
-						$(msg).each(function(i,j){
+						$(msg.data).each(function(i,j){
 							tableBody = '';
 							th = '';
 							$.each(j, function(key,value)
@@ -187,9 +189,47 @@ $(document).ready(function()
 							tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 						})
 						$('#content table').append('<tr>' + th + '</tr>').append(tbody);
+						if (parseInt(msg.info.count) > parseInt(msg.info.last))
+						{
+							$('#content table').after('<a href="#" id="loadEntries" data-db="' + selectedDb + '" data-table="' + selectedTable + '" data-last="' + msg.info.last + '">[load more entries...]</a>');
+						}
 					}
 				})
 				
+				e.preventDefault();
+			})
+			
+			$('#loadEntries').live('click', function(e){
+				var selectedDb = this.getAttribute('data-db');
+				var selectedTable = this.getAttribute('data-table');
+				$.ajax({
+					url: 'showtable.php',
+					type: "POST",
+					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table'), offset: this.getAttribute('data-last')},
+					success: function(msg)
+					{
+						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
+						var tableRow = 0;
+						$(msg.data).each(function(i,j){
+							tableBody = '';
+							th = '';
+							$.each(j, function(key,value)
+							{
+								th += '<th>' + key + '</th>';
+								tableRow = 1 - tableRow;
+								tableBody += '<td data-size="' + value + '">' + value + '</td>';
+							})
+							$('#contentBody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
+						})
+						if (parseInt(msg.info.count) == parseInt(msg.info.last))
+						{
+							$('#content table ~ a').remove();
+						} else
+						{
+							$('#content table ~ a').attr('data-last', msg.info.last);
+						}
+					}
+				})
 				e.preventDefault();
 			})
 			

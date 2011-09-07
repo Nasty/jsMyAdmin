@@ -18,18 +18,26 @@ $query = "SELECT * " .
 		 "LIMIT " . $offset . " , " . $limit;
 
 $result = mysql_query($query);
-$table = array();
+$data = array();
 $tables = array();
 
 while($row = mysql_fetch_assoc($result))
 {
-	$table = array();
+	$data = array();
 	foreach ($row as $key => $value)
 	{
-		$table[$key] = $value;
+		$data[$key] = $value;
 	}
-	$tables[] = $table;	
+	$tables['data'][] = $data;	
 }
+
+$query = "SELECT COUNT(*) AS count FROM `" . $table . "`";
+$result = mysql_query($query);
+$row = mysql_fetch_assoc($result);
+
+$tables['info']['count'] = $row['count'];
+$tables['info']['last'] = count($tables['data']) + $offset;
+
 header('Content-Type: text/json');
 echo json_encode($tables);
 
