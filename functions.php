@@ -3,11 +3,22 @@ session_start();
 
 function ConnectDb()
 {
-	$link = mysql_connect($_SESSION['host'], $_SESSION['user'], $_SESSION['pw']);
-	if (!$link)
+	try
 	{
-	    die('keine Verbindung möglich: ' . mysql_error());
+
+		$link = mysql_connect($_SESSION['host'], $_SESSION['user'], $_SESSION['pw']);
+
+		if (!$link)
+		{
+		    throw new Exception('keine Verbindung möglich: ' . mysql_error());
+		}
+
 	}
+	catch (Exception $e)
+	{
+		throw $e;
+	}
+
 	return $link;
 }
 
