@@ -1,3 +1,6 @@
+<?php
+	include("functions.php");
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +20,7 @@
 	  {
 	  	?>
   		var trigger = {db:'<?=$_GET['db']?>',
-		<?php 
+		<?php
 		if (isset($_GET['table']))
 		{
 		?>
