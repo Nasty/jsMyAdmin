@@ -1,5 +1,5 @@
 <?php
-include('functions.php');
+require_once 'lib/functions.php';
 
 if(isset($_POST['user']))
 {
@@ -34,4 +34,5 @@ catch (Exception $e)
 	header("Location: login.html");
 }
 
-header("Location: index.php");
+$_SESSION['auth'] = 'true';
+header("Location: jsmyadmin.php");

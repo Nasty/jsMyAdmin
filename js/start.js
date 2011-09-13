@@ -30,14 +30,15 @@ $(document).ready(function()
 	
 	$.ajax(
 	{
-		url: "connect.php",
+		url: "service.php?cmd=getDatabases&mode=json",
 	    global: false,
 	    type: "POST",
-		data: {host : 'localhost', user : 'jsmyadmin', pw : 'jsmyadmin'},
+		//data: {host : 'localhost', user : 'jsmyadmin', pw : 'jsmyadmin'},
 	    async:true,
 	    success: function(data)
 	    {
-	    	var databases = jQuery.parseJSON(data);
+	    	var result = jQuery.parseJSON(data);
+	    	var databases = result['result'];
 	    	for(i in databases)
 	    	{
 	    		$('#selector #databases').append('<li id="' + databases[i] + '">' + databases[i] + '</li>');
@@ -54,7 +55,7 @@ $(document).ready(function()
 	    		selectedDb = this.id;
 	    		$.ajax(
 	    		{
-	    			url: "selectdb.php",
+	    			url: "service.php?cmd=selectDatabase&mode=json",
 	    			global: false,
 	    			type: "POST",
 	    			data: {db: this.id},
@@ -69,7 +70,8 @@ $(document).ready(function()
 
 	    				$('#content').hide(0);
 
-	    				var datas = jQuery.parseJSON(data);
+	    				var result = jQuery.parseJSON(data);
+	    				var datas = result['result'];
 	    				
 	    				$('#content').html('<h3>' + selectedDb + '</h3>' + datas.html);
 	    				$('#content thead').html(datas.tableHead);
@@ -112,7 +114,7 @@ $(document).ready(function()
 				$(this).css('fontWeight', 'bold');
 	    		$.ajax(
 	    		{
-	    			url: "selecttable.php",
+	    			url: "service.php?cmd=selectTable&mode=json",
 	    			global: false,
 	    			type: "POST",
 	    			data: {db: selectedDb, table: selectedTable},
@@ -124,7 +126,8 @@ $(document).ready(function()
 
 	    				$('#content').hide(0);
 
-	    				var datas = jQuery.parseJSON(data);
+	    				var result = jQuery.parseJSON(data);
+	    				var datas = result['result'];
 	    				
 	    				$('#content').html('<h3>' + selectedDb + ' &gt; ' + selectedTable + ' &gt; <a href="#" id="showTable" data-db="' + selectedDb + '" data-table="' + selectedTable + '">[show table]</a></h3>' + datas.html);
 	    				$('#content thead').html(datas.tableHead);
@@ -165,11 +168,14 @@ $(document).ready(function()
 				var selectedDb = this.getAttribute('data-db');
 				var selectedTable = this.getAttribute('data-table');
 				$.ajax({
-					url: 'showtable.php',
+					url: 'service.php?cmd=showTable&mode=json',
 					type: "POST",
 					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table')},
-					success: function(msg)
+					success: function(data)
 					{
+						var result = jQuery.parseJSON(data);
+	    				var msg = result['result'];
+	    				
 						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
 						var tableRow = 0;
 						var th = '';
@@ -177,7 +183,8 @@ $(document).ready(function()
 						$('#content table').remove();
 						$('#content').append('<table class="tablesort"></table>');
 						var tbody = $('<tbody id="contentBody"></tbody>');
-						$(msg.data).each(function(i,j){
+						$(msg.data).each(function(i,j)
+						{
 							tableBody = '';
 							th = '';
 							$.each(j, function(key,value)
@@ -203,11 +210,14 @@ $(document).ready(function()
 				var selectedDb = this.getAttribute('data-db');
 				var selectedTable = this.getAttribute('data-table');
 				$.ajax({
-					url: 'showtable.php',
+					url: 'service.php?cmd=showTable&mode=json',
 					type: "POST",
 					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table'), offset: this.getAttribute('data-last')},
-					success: function(msg)
+					success: function(data)
 					{
+						var result = jQuery.parseJSON(data);
+	    				var msg = result['result'];
+	    				
 						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
 						var tableRow = 0;
 						$(msg.data).each(function(i,j){
