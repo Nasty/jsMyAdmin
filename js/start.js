@@ -1,5 +1,11 @@
-var selectedDb = null;
 var animationSpeed = 'fast';
+var options = {
+	"selectedTable" : null,
+	"selectedDb" : null,
+	"count" : null,
+	"lastEntry" : null,
+	"limit" : 30,
+}
 
 function mySort (node)
 {
@@ -20,7 +26,7 @@ $(document).ready(function()
 	
 	$('#tableHeader').click(function() 
 	{
-		if(selectedDb != null)
+		if(options.selectedDb != null)
 		{
 			$(this).next().show(animationSpeed);
 			$('#databaseHeader').next().hide(animationSpeed);
@@ -62,19 +68,25 @@ $(document).ready(function()
 	    			async:true,
 	    			success: function(data)
 	    			{
-	    				window.history.pushState(new Object(), "", "?db=" + selectedDb);
-	    				$('#tableHeader a').html('Tables ( ' + selectedDb + ' )');
+						options.selectedDb = selectedDb;
+						options.selectedTable = false;
+						
+	    				window.history.pushState(new Object(), "", "?db=" + options.selectedDb);
+	    				$('#tableHeader a').html('Tables ( ' + options.selectedDb + ' )');
 	    				$('#selector #tables li').remove();
 	    				
-	    				$('#content table').remove();
+	    				$('#content #show_structure table').remove();
+						$('#content #show_table table').remove();
 
-	    				$('#content').hide(0);
+	    				$('#content #show_structure').hide(0);
 
 	    				var result = jQuery.parseJSON(data);
 	    				var datas = result['result'];
 	    				
-	    				$('#content').html('<h3>' + selectedDb + '</h3>' + datas.html);
-	    				$('#content thead').html(datas.tableHead);
+						$('#content #path').html(options.selectedDb);
+						$('#content #head').hide();
+	    				$('#content #show_structure').html(datas.html);
+	    				$('#content #show_structure thead').html(datas.tableHead);
 	    				
 	    				var tables = datas.data; 
 	    				
@@ -82,7 +94,7 @@ $(document).ready(function()
 	    				
 	    		    	for(i in tables)
 	    		    	{
-	    		    		$('#selector #tables').append('<li id="' + tables[i].name + '" data-db="' + selectedDb + '">' + tables[i].name + '</li>');
+	    		    		$('#selector #tables').append('<li id="' + tables[i].name + '">' + tables[i].name + '</li>');
 	    		    		
 	    		    		tableRow = 1 - tableRow;
 	    		    		
@@ -100,7 +112,7 @@ $(document).ready(function()
 	    		    	$('#databaseHeader').next().hide(animationSpeed);
 	    		    	$('#tableHeader').next().show(animationSpeed);
 						$('.tablesort').tablesorter({textExtraction: mySort}); 
-						$('#content').fadeIn(animationSpeed);
+						$('#content #show_structure').fadeIn(animationSpeed);
 	    			}
 
 	    		});
@@ -108,8 +120,12 @@ $(document).ready(function()
 			
 	    	$('#selector #tables li').live('click', function()
 	    	{
-	    		selectedDb = this.getAttribute('data-db');
-				selectedTable = this.id;
+				if ($(this).parent().attr('id') == 'tables')
+				{
+					$('#content #show_table').html('');
+					$('#content #show_structure').html('');
+				}
+				selectedTable = this.getAttribute('id');
 				$('#selector #tables li').css('fontWeight', 'normal');
 				$(this).css('fontWeight', 'bold');
 	    		$.ajax(
@@ -117,20 +133,30 @@ $(document).ready(function()
 	    			url: "service.php?cmd=selectTable&mode=json",
 	    			global: false,
 	    			type: "POST",
-	    			data: {db: selectedDb, table: selectedTable},
+	    			data: {db: options.selectedDb, table: selectedTable},
 	    			async:true,
 	    			success: function(data)
-	    			{
-	    				window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable);
-	    				$('#content table').remove();
+	    			{	
+						options.selectedDb = selectedDb;
+						options.selectedTable = selectedTable;
+						
+						$('#head button').removeClass('active');
+						$('#showStructure').addClass('active');
+						$('#content #show_structure').show();
+						$('#content #show_table').hide();
+	    				window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable);
+	    				$('#content #show_structure table').remove();
 
-	    				$('#content').hide(0);
+	    				$('#content #show_structure').hide(0);
 
 	    				var result = jQuery.parseJSON(data);
 	    				var datas = result['result'];
 	    				
-	    				$('#content').html('<h3>' + selectedDb + ' &gt; ' + selectedTable + ' &gt; <a href="#" id="showTable" data-db="' + selectedDb + '" data-table="' + selectedTable + '">[show table]</a></h3>' + datas.html);
-	    				$('#content thead').html(datas.tableHead);
+	    				$('#content #path').html(options.selectedDb + ' &gt; ' + options.selectedTable);
+						$('#content #head').show();
+						
+						$('#content #show_structure').html(datas.html);
+	    				$('#content #show_structure thead').html(datas.tableHead);
 	    				
 	    				var tables = datas.data; 
 	    				
@@ -158,67 +184,69 @@ $(document).ready(function()
 	    		    	$('#databaseHeader').next().hide(animationSpeed);
 	    		    	$('#tableHeader').next().show(animationSpeed);
 						$('.tablesort').tablesorter({textExtraction: mySort}); 
-						$('#content').fadeIn(animationSpeed);
+						$('#content #show_structure').fadeIn(animationSpeed);
 	    			}
 
 	    		});
 	    	});
 			
 			$('#showTable').live('click', function(e){
-				var selectedDb = this.getAttribute('data-db');
-				var selectedTable = this.getAttribute('data-table');
-				$.ajax({
-					url: 'service.php?cmd=showTable&mode=json',
-					type: "POST",
-					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table')},
-					success: function(data)
-					{
-						var result = jQuery.parseJSON(data);
-	    				var msg = result['result'];
-	    				
-						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
-						var tableRow = 0;
-						var th = '';
-						var tableBody = '';
-						$('#content table').remove();
-						$('#content').append('<table class="tablesort"></table>');
-						var tbody = $('<tbody id="contentBody"></tbody>');
-						$(msg.data).each(function(i,j)
+				if ($('#content #show_table').children().length == 0)
+				{
+					$.ajax({
+						url: 'service.php?cmd=showTable&mode=json',
+						type: "POST",
+						data: {db: options.selectedDb, table:  options.selectedTable},
+						success: function(data)
 						{
-							tableBody = '';
-							th = '';
-							$.each(j, function(key,value)
+							var result = jQuery.parseJSON(data);
+							var msg = result['result'];
+							
+							window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
+							var tableRow = 0;
+							var th = '';
+							var tableBody = '';
+							$('#content #show_table table').remove();
+							$('#content #show_table').append('<table class="tablesort"></table>');
+							var tbody = $('<tbody id="contentBody"></tbody>');
+							$(msg.data).each(function(i,j)
 							{
-								th += '<th>' + key + '</th>';
-								tableRow = 1 - tableRow;
-								tableBody += '<td data-size="' + value + '">' + value + '</td>';
+								tableBody = '';
+								th = '';
+								$.each(j, function(key,value)
+								{
+									th += '<th>' + key + '</th>';
+									tableRow = 1 - tableRow;
+									tableBody += '<td data-size="' + value + '">' + value + '</td>';
+								})
+								tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 							})
-							tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
-						})
-						$('#content table').append('<tr>' + th + '</tr>').append(tbody);
-						if (parseInt(msg.info.count) > parseInt(msg.info.last))
-						{
-							$('#content table').after('<a href="#" id="loadEntries" data-db="' + selectedDb + '" data-table="' + selectedTable + '" data-last="' + msg.info.last + '">[load more entries...]</a>');
+							$('#content #show_table table').append('<tr>' + th + '</tr>').append(tbody);
+							options.count = parseInt(msg.info.count);
+							if (options.count > parseInt(msg.info.last))
+							{
+								$('#content #show_table table').after('<a href="#" id="loadEntries">[load more entries...]</a>');
+								options.lastEntry = parseInt(msg.info.last);
+							}
 						}
-					}
-				})
-				
+					})
+				}
+				$('#content #show_table').show();
+				$('#content #show_structure').hide();
 				e.preventDefault();
 			})
 			
 			$('#loadEntries').live('click', function(e){
-				var selectedDb = this.getAttribute('data-db');
-				var selectedTable = this.getAttribute('data-table');
 				$.ajax({
 					url: 'service.php?cmd=showTable&mode=json',
 					type: "POST",
-					data: {db: this.getAttribute('data-db'), table: this.getAttribute('data-table'), offset: this.getAttribute('data-last')},
+					data: {db: options.selectedDb, table: options.selectedTable, offset: options.lastEntry},
 					success: function(data)
 					{
 						var result = jQuery.parseJSON(data);
 	    				var msg = result['result'];
 	    				
-						window.history.pushState(new Object(), "", "?db=" + selectedDb + '&table=' + selectedTable + '&action=show');
+						window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
 						var tableRow = 0;
 						$(msg.data).each(function(i,j){
 							tableBody = '';
@@ -229,27 +257,39 @@ $(document).ready(function()
 								tableRow = 1 - tableRow;
 								tableBody += '<td data-size="' + value + '">' + value + '</td>';
 							})
-							$('#contentBody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
+							$('#content #show_table table tbody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 						})
 						if (parseInt(msg.info.count) == parseInt(msg.info.last))
 						{
-							$('#content table ~ a').remove();
+							$('#content #show_table table ~ a').remove();
 						} else
 						{
-							$('#content table ~ a').attr('data-last', msg.info.last);
+							options.lastEntry = parseInt(msg.info.last);
+							$('#content #show_table  table ~ a').attr('data-last', msg.info.last);
 						}
 					}
 				})
 				e.preventDefault();
 			})
 			
+			$('#head button').live('click', function(e){
+				$('#head button').removeClass('active');
+				$(this).addClass('active');
+				$('#content div[id!="head"]').hide().removeClass('active');
+				$('#' + $(this).attr('data-content')).show();
+				e.preventDefault();
+				return false;
+			})
+			
 	    	
 	    	if(trigger != null)
 	    	{
+				options.selectedDb = trigger.db;
 				$('#databases #' + trigger.db).trigger('click');
 				//needs work...
 				if (trigger.table != null)
 				{
+					options.selectedTable = trigger.table;
 					$('#tables #' + trigger.table).trigger('click');
 				}
 	    	}

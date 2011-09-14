@@ -57,7 +57,16 @@
     </div>
     <div id="content">
 		<h3 id="path"></h3>
-
+		<div id="head">
+			<button id="showTable" data-content="show_table" />Anzeigen</button>
+			<button id="showStructure" data-content="show_structure" class="active" />Struktur</button>
+			<button id="showStructure" data-content="show_sql" />SQL</button>
+			<button id="showStructure" data-content="show_search" />Suche</button>
+		</div>
+		<div id="show_table" style="display:none;"></div>
+		<div id="show_structure"></div>
+		<div id="show_sql" style="display:none;">SQL</div>
+		<div id="show_search" style="display:none;">Suche</div>
     </div>
     <div class="clearDiv"><!--  --></div>
   </div>

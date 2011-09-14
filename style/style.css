@@ -39,6 +39,15 @@
 	cursor: pointer;
 }
 
+#head button {
+	padding: 2px 5px;
+	border: 1px solid #000;
+}
+
+#head button.active {
+	font-weight: bold;
+}
+
 #content {
 	/*width: 749px;*/
 	min-height: 520px;
