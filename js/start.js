@@ -70,6 +70,9 @@ $(document).ready(function()
 	    	$('#selector #databases li').bind('click', function()
 	    	{
 				$('#spinner').show();
+				$('#head button').each(function(i){
+					$('#' + $(this).attr('data-content')).hide().removeClass('active');
+				})
 	    		selectedDb = this.id;
 	    		$.ajax(
 	    		{
