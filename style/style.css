@@ -39,6 +39,10 @@
 	cursor: pointer;
 }
 
+#head {
+	margin-bottom:5px;
+}
+
 #head button {
 	padding: 2px 5px;
 	border: 1px solid #000;
