@@ -10,6 +10,7 @@
   <script type="text/javascript" src="js/jquery.accordion.js"></script>
   <script type="text/javascript" src="js/start.js"></script>
   <script type="text/javascript" src="js/jquery.tablesort.js"></script>
+  <script type="text/javascript" src="js/spin.js"></script>
 
  	<script type="text/javascript">
 	  <?php

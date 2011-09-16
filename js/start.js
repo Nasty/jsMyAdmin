@@ -6,6 +6,16 @@ var options = {
 	"lastEntry" : null,
 	"limit" : 30,
 }
+var spinnerOpts = {
+  lines: 16, // The number of lines to draw
+  length: 15, // The length of each line
+  width: 13, // The line thickness
+  radius: 0, // The radius of the inner circle
+  color: '#555', // #rbg or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 100, // Afterglow percentage
+  shadow: false // Whether to render a shadow
+};
 
 function mySort (node)
 {
@@ -14,6 +24,7 @@ function mySort (node)
 
 $(document).ready(function()
 {     
+	$('<div id="spinner">').css({'position':'relative','margin':'20px auto 30px 50%', 'float':'left'}).spin(spinnerOpts).appendTo('#content').hide();
 	$('#databaseHeader').next().hide();
 	$('#tableHeader').next().hide();
 	
@@ -58,6 +69,7 @@ $(document).ready(function()
 	    	
 	    	$('#selector #databases li').bind('click', function()
 	    	{
+				$('#spinner').show();
 	    		selectedDb = this.id;
 	    		$.ajax(
 	    		{
@@ -113,6 +125,7 @@ $(document).ready(function()
 	    		    	$('#tableHeader').next().show(animationSpeed);
 						$('.tablesort').tablesorter({textExtraction: mySort}); 
 						$('#content #show_structure').fadeIn(animationSpeed);
+						$('#spinner').hide();
 	    			}
 
 	    		});
@@ -125,6 +138,7 @@ $(document).ready(function()
 					$('#content #show_table').html('');
 					$('#content #show_structure').html('');
 				}
+				$('#spinner').show();
 				selectedTable = this.getAttribute('id');
 				$('#selector #tables li').css('fontWeight', 'normal');
 				$(this).css('fontWeight', 'bold');
@@ -185,6 +199,7 @@ $(document).ready(function()
 	    		    	$('#tableHeader').next().show(animationSpeed);
 						$('.tablesort').tablesorter({textExtraction: mySort}); 
 						$('#content #show_structure').fadeIn(animationSpeed);
+						$('#spinner').hide();
 	    			}
 
 	    		});
@@ -193,6 +208,7 @@ $(document).ready(function()
 			$('#showTable').live('click', function(e){
 				if ($('#content #show_table').children().length == 0)
 				{
+					$('#spinner').show();
 					$.ajax({
 						url: 'service.php?cmd=showTable&mode=json',
 						type: "POST",
@@ -228,6 +244,7 @@ $(document).ready(function()
 								$('#content #show_table table').after('<a href="#" id="loadEntries">[load more entries...]</a>');
 								options.lastEntry = parseInt(msg.info.last);
 							}
+							$('#spinner').hide();
 						}
 					})
 				}
@@ -237,6 +254,7 @@ $(document).ready(function()
 			})
 			
 			$('#loadEntries').live('click', function(e){
+				$('#spinner').show();
 				$.ajax({
 					url: 'service.php?cmd=showTable&mode=json',
 					type: "POST",
@@ -267,6 +285,7 @@ $(document).ready(function()
 							options.lastEntry = parseInt(msg.info.last);
 							$('#content #show_table  table ~ a').attr('data-last', msg.info.last);
 						}
+						$('#spinner').hide();
 					}
 				})
 				e.preventDefault();
@@ -275,7 +294,10 @@ $(document).ready(function()
 			$('#head button').live('click', function(e){
 				$('#head button').removeClass('active');
 				$(this).addClass('active');
-				$('#content div[id!="head"]').hide().removeClass('active');
+				//$('#content div[id!="head"]').hide().removeClass('active');
+				$('#head button').each(function(i){
+					$('#' + $(this).attr('data-content')).hide().removeClass('active');
+				})
 				$('#' + $(this).attr('data-content')).show();
 				e.preventDefault();
 				return false;
