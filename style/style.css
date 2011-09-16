@@ -51,10 +51,14 @@
 #content {
 	/*width: 749px;*/
 	min-height: 520px;
-	overflow-y: scroll;
+	height: 750px;
 	/*float: right;*/
 	padding: 10px;
 	margin-left:220px;
+}
+#content #show_table, #content #show_structure, #content #show_sql, #content #show_search {
+	height: 710px;
+	overflow-y: scroll;
 }
 
 #content table {
