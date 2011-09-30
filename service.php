@@ -1,7 +1,10 @@
 <?php
+session_start();
 require_once 'lib/functions.php';
 require_once 'lib/Service.php';
 require_once 'lib/Service/Core.php';
+
+$_SESSION['lastAction'] = time();
 
 $command = $_GET['cmd'];
 $mode = $_GET['mode'];

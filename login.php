@@ -25,6 +25,7 @@ $_SESSION['host'] = 'localhost';
 $_SESSION['user'] = $user;
 $_SESSION['pw'] = $password;
 $_SESSION['loginTime'] = time();
+$_SESSION['lastAction'] = time();
 
 try
 {
