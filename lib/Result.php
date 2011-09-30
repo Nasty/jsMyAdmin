@@ -51,10 +51,10 @@ class Service_Result
 	 */	
 	public function setData ($data, $key = null)
 	{
-		if (is_array($data))
-		{
-			array_walk_recursive($data, 'utf8_encode');
-		}
+	//	if (is_array($data))
+	//	{
+	//		array_walk_recursive($data, 'utf8_encode');
+	//	}
 		if ($key)
 		{
 			$this->_data[$key] = $data;
