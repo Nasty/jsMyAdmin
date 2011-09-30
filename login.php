@@ -24,6 +24,7 @@ else
 $_SESSION['host'] = 'localhost';
 $_SESSION['user'] = $user;
 $_SESSION['pw'] = $password;
+$_SESSION['loginTime'] = time();
 
 try
 {
