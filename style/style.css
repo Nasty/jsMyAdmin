@@ -102,3 +102,12 @@
 .clearDiv {
 	clear: both;
 }
+#logout {
+	float:right;
+	margin-right: 5px;
+	border: 1px solid #000000;
+	padding: 2px 5px;
+	background: #E0DFE3;
+	color: #000;
+	text-decoration: none;
+}
