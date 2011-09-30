@@ -181,7 +181,7 @@ class Service_Core
 
 		$query = "SELECT " . $columns .
 				 "FROM `" . $table . "` " .
-				 "ORDER BY 1" .
+				 "ORDER BY 1 " .
 				 "LIMIT " . $offset . " , " . $limit;
 
 		$result = mysql_query($query);
