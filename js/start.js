@@ -296,7 +296,7 @@ $(document).ready(function()
 			
 			$('#head button').live('click', function(e){
 				$('#head button').removeClass('active');
-				$(this).addClass('acCopy of start2.jstive');
+				$(this).addClass('active');
 				//$('#content div[id!="head"]').hide().removeClass('active');
 				$('#head button').each(function(i){
 					$('#' + $(this).attr('data-content')).hide().removeClass('active');
