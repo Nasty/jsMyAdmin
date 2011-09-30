@@ -5,6 +5,7 @@ var options = {
 	"count" : null,
 	"lastEntry" : null,
 	"limit" : 30,
+	"truncateData" : 50, //0 = no trucate
 }
 var spinnerOpts = {
   lines: 16, // The number of lines to draw
@@ -236,7 +237,13 @@ $(document).ready(function()
 								{
 									th += '<th>' + key + '</th>';
 									tableRow = 1 - tableRow;
-									tableBody += '<td data-size="' + value + '">' + value + '</td>';
+									if (options.truncateData > 0 && value.length > options.truncateData)
+									{
+										tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
+									} else
+									{
+										tableBody += '<td data-size="' + value + '">' + value + '</td>';
+									}
 								})
 								tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 							})
@@ -276,7 +283,13 @@ $(document).ready(function()
 							{
 								th += '<th>' + key + '</th>';
 								tableRow = 1 - tableRow;
-								tableBody += '<td data-size="' + value + '">' + value + '</td>';
+								if (options.truncateData > 0 && value.length > options.truncateData)
+								{
+									tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
+								} else
+								{
+									tableBody += '<td data-size="' + value + '">' + value + '</td>';
+								}
 							})
 							$('#content #show_table table tbody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 						})
@@ -302,6 +315,12 @@ $(document).ready(function()
 					$('#' + $(this).attr('data-content')).hide().removeClass('active');
 				})
 				$('#' + $(this).attr('data-content')).show();
+				e.preventDefault();
+				return false;
+			})
+			
+			$('.showMore').live('click', function(e){
+				$(this).prev().toggle(300);
 				e.preventDefault();
 				return false;
 			})
