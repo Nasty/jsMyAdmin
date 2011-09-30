@@ -5,24 +5,24 @@ class Service_Result
 	protected $_data;
 	protected $_info;
 	protected $_result;
-	
+
 	public function __construct ()
 	{
 		//
 		$this->_result = array();
 	}
-	
+
 	public function format ()
 	{
 		$this->_result['header'] = $this->getHead();
 		$this->_result['data'] = $this->getData();
 		$this->_result['info'] = $this->getInfo();
-		
+
 		return $this->getResult();
 	}
-	
-	
-	
+
+
+
 
 	/**
 	 * set $_head
@@ -48,16 +48,13 @@ class Service_Result
 	 * set $_data
 	 * @param mixed $data
 	 * @return void
-	 */	
+	 */
 	public function setData ($data, $key = null)
 	{
-		if (is_array($data))
-		{
-			array_walk_recursive($data, function(&$a,&$b){
-				$a = utf8_encode($a);
-				$b = utf8_encode($b);
-			});
-		}
+//  if (is_array($data))
+//  {
+//  	array_walk_recursive($data, 'utf8_encode');
+//  }
 		if ($key)
 		{
 			$this->_data[$key] = $data;
@@ -66,12 +63,12 @@ class Service_Result
 			$this->_data = $data;
 		}
 	}
-	
+
 	/**
 	 * set $_info
 	 * @param mixed $info
 	 * @return void
-	 */	
+	 */
 	public function setInfo ($info, $key = null)
 	{
 		if (is_array($info))
@@ -86,43 +83,43 @@ class Service_Result
 			$this->_info = $info;
 		}
 	}
-	
+
 	/**
 	 * get $_head
 	 * @return mixed $_head
-	 */	
+	 */
 	public function getHead ()
 	{
 		return $this->_head;
 	}
-	
+
 	/**
 	 * get $_data
 	 * @return mixed $_data
-	 */	
+	 */
 	public function getData ()
 	{
 		return $this->_data;
 	}
-	
+
 	/**
 	 * get $_info
 	 * @return mixed $_info
-	 */	
+	 */
 	public function getInfo ()
 	{
 		return $this->_info;
 	}
-	
-	
+
+
 	/**
 	 * get $_result
 	 * @return mixed $_result
-	 */	
+	 */
 	public function getResult ()
 	{
 		return $this->_result;
 	}
-	
+
 }
 ?>
