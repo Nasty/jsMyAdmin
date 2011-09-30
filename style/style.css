@@ -9,24 +9,31 @@
 }
 
 #wrapper {
-	/*width: 980px;*/
-	margin: 10px auto;
-	border: 1px solid black;
+	width: 100%;
+	height: 100%;
 }
 
 #selector {
-	 float: left;
-	 width: 220px;
-	 position: fixed;
+	position: absolute;
+	left: 0px;
+  top: 0px;
+  bottom: 0px;
+	width: 220px;
+
+	overflow-x: hidden;
+  overflow-y: scroll;
 }
+
+#selector div {
+  position: relative;
+  width: 200px;
+}
+	
 
 #selector ul {
 	width: 200px;
-	height: 500px;
 	list-style-type: none;
 	padding: 2px 5px;
-  overflow-x: hidden;
-  overflow-y: scroll;
 	border-right: 1px solid black;
 }
 
