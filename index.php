@@ -13,13 +13,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>jsMyAdmin</title>
 
-  <link rel="stylesheet" type="text/css" href="style/style.css" />
+  <link rel="stylesheet/less" type="text/css" href="style/styles.less">
 
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/jquery.accordion.js"></script>
   <script type="text/javascript" src="js/start.js"></script>
   <script type="text/javascript" src="js/jquery.tablesort.js"></script>
   <script type="text/javascript" src="js/spin.js"></script>
+  <script type="text/javascript" src="js/less-1.1.3.min.js"></script>
 
  	<script type="text/javascript">
 	  <?php
