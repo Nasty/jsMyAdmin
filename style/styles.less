@@ -6,6 +6,11 @@
 	border: none;
 }
 
+body
+{
+  overflow: hidden;
+}
+
 header {
 	border-bottom: 1px solid #000;
 	padding: 0px 5px;
@@ -61,10 +66,19 @@ header {
 }
 
 #content {
-	min-height: 520px;
+  position: absolute;
+  top: 40px;
+  right: 0px;
+  bottom: 0px;
+  left: 230px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding: 0px 5px;
+	
+	/*min-height: 520px;
 	height: 750px;
 	padding: 10px;
-	margin-left:220px;
+	margin-left:220px;*/
 	
 	table {
 		border-collapse: collapse;
@@ -94,7 +108,11 @@ header {
 }
 
 #content #show_table, #content #show_structure, #content #show_sql, #content #show_search {
-	height: 710px;
+	position: absolute;
+	top: 45px;
+	bottom: 10px;
+	left: 0px;
+	right: 10px;
 	overflow-y: scroll;
 }
 
