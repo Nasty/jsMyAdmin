@@ -6,6 +6,7 @@ var options = {
 	"lastEntry" : null,
 	"limit" : 30,
 	"truncateData" : 50, //0 = no trucate
+	"queryInProgress" : false,
 }
 var spinnerOpts = {
   lines: 16, // The number of lines to draw
@@ -219,6 +220,7 @@ $(document).ready(function()
 						data: {db: options.selectedDb, table:  options.selectedTable},
 						success: function(data)
 						{
+							options.queryInProgress = true;
 							var result = jQuery.parseJSON(data);
 							var msg = result['result'];
 							
@@ -255,13 +257,28 @@ $(document).ready(function()
 								$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
 								options.lastEntry = parseInt(msg.info.last);
 							}
+							options.queryInProgress = false;
 							$('#spinner').hide();
+							if ( ( $('#show_table').find('.tablesort').height() - $('#show_table').scrollTop() < ($('#show_table').height()+300) ) && options.count > parseInt(msg.info.last) && options.queryInProgress == false)
+							{
+								options.queryInProgress = true;
+								$('#loadEntries').click();
+							}
 						}
 					})
 				}
 				$('#content #show_table').show();
 				$('#content #show_structure').hide();
 				e.preventDefault();
+			})
+			
+			
+			$('#show_table').scroll(function(){
+				if ( ($(this).find('.tablesort').height() - $(this).scrollTop() < ($(this).height()+300) ) && options.queryInProgress == false )
+				{
+					options.queryInProgress = true;
+					$('#loadEntries').click();
+				}
 			})
 			
 			$('#loadEntries').live('click', function(e){
@@ -272,6 +289,7 @@ $(document).ready(function()
 					data: {db: options.selectedDb, table: options.selectedTable, offset: options.lastEntry},
 					success: function(data)
 					{
+						options.queryInProgress = true;
 						var result = jQuery.parseJSON(data);
 	    				var msg = result['result'];
 	    				
@@ -303,6 +321,7 @@ $(document).ready(function()
 							$('#content #show_table  table ~ a').attr('data-last', msg.info.last);
 						}
 						$('#spinner').hide();
+						options.queryInProgress = false;
 					}
 				})
 				e.preventDefault();

@@ -136,6 +136,7 @@ class Service_Core
 
     public function showTable($params)
     {
+		$startTime = microtime (true);
     	if(isset($params['db']) && isset($params['table']))
 		{
 			$table = mysql_escape_string($params['table']);
@@ -213,7 +214,10 @@ class Service_Core
 
 		$serviceResult->setInfo($row['count'], 'count');
 		$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
-
+		
+		$endTime = microtime (true);
+		$serviceResult->setInfo(($endTime - $startTime), 'execTime');
+		
 		$format = $serviceResult->format();
 		return $format;
 		//return $tables;
