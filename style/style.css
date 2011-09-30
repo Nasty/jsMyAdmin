@@ -15,8 +15,8 @@
 
 #selector {
 	position: absolute;
+  top: 40px;
 	left: 0px;
-  top: 0px;
   bottom: 0px;
 	width: 220px;
 
