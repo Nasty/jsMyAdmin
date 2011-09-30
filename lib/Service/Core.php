@@ -166,9 +166,13 @@ class Service_Core
 				case 'mediumblob':
 					$columns .= " LENGTH(" . $column['field'] . ") AS " . $column['field'] . ", ";
 					break;
-				case 'int':
 				case 'varchar':
+				case 'text':
+					$columns .= " " . $column['field'] . ", ";
+					break;
+
 				case 'tinyint':
+				case 'int':
 					$columns .= " " . $column['field'] . ", ";
 					break;
 
@@ -193,7 +197,7 @@ class Service_Core
 			$data = array();
 			foreach ($row as $key => $value)
 			{
-				$data[$key] = $value;
+				$data[$key] = htmlentities($value);
 			}
 			$tables['data'][] = $data;
 		}
