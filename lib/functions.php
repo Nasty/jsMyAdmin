@@ -10,14 +10,14 @@ function ConnectDb()
 
 		if (!$link)
 		{
-			header("Location: index.html");
+			header("Location: index.php");
 			exit();
 		}
 
 	}
 	catch (Exception $e)
 	{
-		header("Location: index.html");	
+		header("Location: index.php");	
 	}
 
 	return $link;

@@ -35,4 +35,4 @@ catch (Exception $e)
 }
 
 $_SESSION['auth'] = 'true';
-header("Location: jsmyadmin.php");
+header("Location: index.php");
