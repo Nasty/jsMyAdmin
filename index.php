@@ -55,7 +55,7 @@
 </head>
 <body>
 	<header>
-		Eingeloggt als: <?php echo $_SESSION['user']; ?><br />
+		Eingeloggt als: <b><?php echo $_SESSION['user']; ?></b><br />
 		seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr
 		<a href="logout.php" id="logout">[Logout]</a>
 	</header>
