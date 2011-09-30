@@ -164,20 +164,20 @@ class Service_Core
 				case 'blob':
 				case 'tinyblob':
 				case 'mediumblob':
-					$columns .= " LENGTH(" . $column['field'] . ") AS " . $column['field'] . ", ";
+					$columns .= " LENGTH(`" . $column['field'] . "`) AS `" . $column['field'] . "`, ";
 					break;
 				case 'varchar':
 				case 'text':
-					$columns .= " " . $column['field'] . ", ";
+					$columns .= " `" . $column['field'] . "`, ";
 					break;
 
 				case 'tinyint':
 				case 'int':
-					$columns .= " " . $column['field'] . ", ";
+					$columns .= " `" . $column['field'] . "`, ";
 					break;
 
 				default:
-					$columns .= " " . $column['field'] . ", ";
+					$columns .= " `" . $column['field'] . "`, ";
 			}
 		}
 
