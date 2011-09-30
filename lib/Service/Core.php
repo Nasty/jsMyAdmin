@@ -116,7 +116,7 @@ class Service_Core
 					  Aktion
 					</th>
 		          </tr>';
-		
+
 		while($row = mysql_fetch_assoc($result))
 		{
 			$table[] = array();
@@ -141,21 +141,21 @@ class Service_Core
 			$table = mysql_escape_string($params['table']);
 			$db = mysql_escape_string($params['db']);
 			mysql_select_db($db);
-			
+
 			$data = $this->selectTable($params);
 		}
-		
+
 		$serviceResult = new Service_Result();
-		
+
 
 		$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
 		$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
-		
+
 		$serviceResult->setInfo($offset, 'offset');
 		$serviceResult->setInfo($limit, 'limit');
 
 		$columns = "";
-		
+
 		foreach($data['data'] as $key => $column)
 		{
 			switch ($column['attribute'])
@@ -163,7 +163,7 @@ class Service_Core
 				case 'longblob':
 				case 'blob':
 				case 'tinyblob':
-				case 'mediumblob': 
+				case 'mediumblob':
 					$columns .= " LENGTH(" . $column['field'] . ") AS " . $column['field'] . ", ";
 					break;
 				case 'int':
@@ -171,16 +171,17 @@ class Service_Core
 				case 'tinyint':
 					$columns .= " " . $column['field'] . ", ";
 					break;
-					
+
 				default:
 					$columns .= " " . $column['field'] . ", ";
 			}
 		}
 
 		$columns = substr($columns, 0, -2) . " ";
-		
+
 		$query = "SELECT " . $columns .
 				 "FROM `" . $table . "` " .
+				 "ORDER BY 1 " .
 				 "LIMIT " . $offset . " , " . $limit;
 
 		$result = mysql_query($query);
@@ -196,7 +197,7 @@ class Service_Core
 			}
 			$tables['data'][] = $data;
 		}
-		
+
 		$serviceResult->setData($tables['data']);
 
 		$query = "SELECT COUNT(*) AS count FROM `" . $table . "`";
@@ -208,7 +209,7 @@ class Service_Core
 
 		$serviceResult->setInfo($row['count'], 'count');
 		$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
-		
+
 		$format = $serviceResult->format();
 		return $format;
 		//return $tables;
