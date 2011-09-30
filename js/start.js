@@ -252,7 +252,7 @@ $(document).ready(function()
 							options.count = parseInt(msg.info.count);
 							if (options.count > parseInt(msg.info.last))
 							{
-								$('#content #show_table table').after('<a href="#" id="loadEntries">[load more entries...]</a>');
+								$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
 								options.lastEntry = parseInt(msg.info.last);
 							}
 							$('#spinner').hide();
