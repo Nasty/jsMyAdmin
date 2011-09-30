@@ -70,106 +70,147 @@ class Service_Core
     public function selectTable($params)
     {
     	if(isset($params['db']) && isset($params['db']))
-			{
-				$table = mysql_escape_string($params['table']);
-				$db = mysql_escape_string($params['db']);
-			}
+		{
+			$table = mysql_escape_string($params['table']);
+			$db = mysql_escape_string($params['db']);
+		}
 
-			$query = "SHOW FULL COLUMNS FROM " . $table . " FROM " . $db;
+		//$query = "SHOW FULL COLUMNS FROM " . $table . " FROM " . $db;
+		$query = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . $db . "' AND TABLE_NAME = '" . $table . "';";
 
-			$result = mysql_query($query);
+		$result = mysql_query($query);
 
-			$table = array();
-			$tables = array();
+		$table = array();
+		$tables = array();
 
-			$tables['html'] = '<table class="tablesort">
-			        <thead>
-			        </thead>
-			        <tbody id="contentBody">
-			        </tbody>
-			      </table>';
-			$tables['tableHead'] = '<tr class="tableRow0">
-						<th></th>
-			            <th>
-			              Field
-			            </th>
-			            <th>
-			              Type
-						</th>
-			            <th>
-			              Collation
-			            </th>
-			            <th>
-			              Attribute
-			            </th>
-			            <th>
-			              Null
-			            </th>
-						<th>
-						  Standard
-						</th>
-						<th>
-						  Extra
-						</th>
-						<th>
-						  Aktion
-						</th>
-			          </tr>';
-			while($row = mysql_fetch_assoc($result))
-			{
-				$table[] = array();
-				$table['field'] = $row['Field'];
-				$type = explode(') ', $row['Type'], 2);
-				$table['type'] = $type[0];
-				$table['collation'] = $row['Collation'];
-				$table['attribute'] = $type[1] == null ? '' : $type[1];
-				$table['null'] = $row['Null'];
-				$table['key'] = $row['Null'] == null ? '---' : $row['TABLE_COLLATION'];
-				$table['default'] = $row['Default'];
-				$table['extra'] = $row['Extra'];
-				$tables['data'][] = $table;
-			}
+		$tables['html'] = '<table class="tablesort">
+		        <thead>
+		        </thead>
+		        <tbody id="contentBody">
+		        </tbody>
+		      </table>';
+		$tables['tableHead'] = '<tr class="tableRow0">
+					<th></th>
+		            <th>
+		              Field
+		            </th>
+		            <th>
+		              Type
+					</th>
+		            <th>
+		              Collation
+		            </th>
+		            <th>
+		              Attribute
+		            </th>
+		            <th>
+		              Null
+		            </th>
+					<th>
+					  Standard
+					</th>
+					<th>
+					  Extra
+					</th>
+					<th>
+					  Aktion
+					</th>
+		          </tr>';
+		
+		while($row = mysql_fetch_assoc($result))
+		{
+			$table[] = array();
+			$table['field'] = $row['COLUMN_NAME'];
+			$table['type'] = $row['COLUMN_TYPE'];
+			$table['collation'] = $row['COLLATION_NAME'];
+			$table['attribute'] = $row['DATA_TYPE'];
+			$table['null'] = $row['IS_NULLABLE'];
+			$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
+			$table['default'] = $row['COLUMN_DEFAULT'];
+			$table['extra'] = $row['EXTRA'];
+			$tables['data'][] = $table;
+		}
 
-			return $tables;
+		return $tables;
     }
 
     public function showTable($params)
     {
     	if(isset($params['db']) && isset($params['table']))
+		{
+			$table = mysql_escape_string($params['table']);
+			$db = mysql_escape_string($params['db']);
+			mysql_select_db($db);
+			
+			$data = $this->selectTable($params);
+		}
+		
+		$serviceResult = new Service_Result();
+		
+
+		$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
+		$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
+		
+		$serviceResult->setInfo($offset, 'offset');
+		$serviceResult->setInfo($limit, 'limit');
+
+		$columns = "";
+		
+		foreach($data['data'] as $key => $column)
+		{
+			switch ($column['attribute'])
 			{
-				$table = mysql_escape_string($params['table']);
-				$db = mysql_escape_string($params['db']);
-				mysql_select_db($db);
+				case 'longblob':
+				case 'blob':
+				case 'tinyblob':
+				case 'mediumblob': 
+					$columns .= " LENGTH(" . $column['field'] . ") AS " . $column['field'] . ", ";
+					break;
+				case 'int':
+				case 'varchar':
+				case 'tinyint':
+					$columns .= " " . $column['field'] . ", ";
+					break;
+					
+				default:
+					$columns .= " " . $column['field'] . ", ";
 			}
+		}
 
-			$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
-			$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
+		$columns = substr($columns, 0, -2) . " ";
+		
+		$query = "SELECT " . $columns .
+				 "FROM `" . $table . "` " .
+				 "LIMIT " . $offset . " , " . $limit;
 
-			$query = "SELECT * " .
-					 "FROM `" . $table . "` " .
-					 "LIMIT " . $offset . " , " . $limit;
+		$result = mysql_query($query);
+		$data = array();
+		$tables = array();
 
-			$result = mysql_query($query);
+		while($row = mysql_fetch_assoc($result))
+		{
 			$data = array();
-			$tables = array();
-
-			while($row = mysql_fetch_assoc($result))
+			foreach ($row as $key => $value)
 			{
-				$data = array();
-				foreach ($row as $key => $value)
-				{
-					$data[$key] = $value;
-				}
-				$tables['data'][] = $data;
+				$data[$key] = $value;
 			}
+			$tables['data'][] = $data;
+		}
+		
+		$serviceResult->setData($tables['data']);
 
-			$query = "SELECT COUNT(*) AS count FROM `" . $table . "`";
-			$result = mysql_query($query);
-			$row = mysql_fetch_assoc($result);
+		$query = "SELECT COUNT(*) AS count FROM `" . $table . "`";
+		$result = mysql_query($query);
+		$row = mysql_fetch_assoc($result);
 
-			$tables['info']['count'] = $row['count'];
-			$tables['info']['last'] = count($tables['data']) + $offset;
+		$tables['info']['count'] = $row['count'];
+		$tables['info']['last'] = count($tables['data']) + $offset;
 
-			return $tables;
+		$serviceResult->setInfo($row['count'], 'count');
+		$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
+		
+		$format = $serviceResult->format();
+		return $format;
+		//return $tables;
     }
 }

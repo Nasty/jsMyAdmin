@@ -10,13 +10,14 @@ function ConnectDb()
 
 		if (!$link)
 		{
-		    throw new Exception('keine Verbindung möglich: ' . mysql_error());
+			header("Location: index.html");
+			exit();
 		}
 
 	}
 	catch (Exception $e)
 	{
-		throw $e;
+		header("Location: index.html");	
 	}
 
 	return $link;
