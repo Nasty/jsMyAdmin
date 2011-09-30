@@ -227,8 +227,8 @@ $(document).ready(function()
 							var th = '';
 							var tableBody = '';
 							$('#content #show_table table').remove();
-							$('#content #show_table').append('<table class="tablesort"></table>');
-							var tbody = $('<tbody id="contentBody"></tbody>');
+						//	$('#content #show_table').append('');
+							var tbody = $('<table class="tablesort"><tbody id="contentBody"></tbody></table>');
 							$(msg.data).each(function(i,j)
 							{
 								tableBody = '';
@@ -247,7 +247,8 @@ $(document).ready(function()
 								})
 								tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
 							})
-							$('#content #show_table table').append('<tr>' + th + '</tr>').append(tbody);
+							tbody.prepend('<tr>' + th + '</tr>');
+							$('#content #show_table').append(tbody);
 							options.count = parseInt(msg.info.count);
 							if (options.count > parseInt(msg.info.last))
 							{
