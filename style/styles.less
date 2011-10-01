@@ -1,3 +1,13 @@
+// --------LESS Values--------------------------
+
+.stripedBd (@radius) {
+	background-color: #DDDDDD;
+	background-image: -moz-linear-gradient(right top , transparent, transparent 15%, rgba(238, 238, 238, 0.5) 15%, rgba(238, 238, 238, 0.5) 50%, transparent 50%, transparent 65%, rgba(238, 238, 238, 0.5) 65%, rgba(238, 238, 238, 0.5));
+	background-size: @radius @radius;
+}
+
+// ---------------------------------------
+
 * {
 	font-family: arial;
 	font-size: 0.97em;
@@ -81,15 +91,19 @@ header {
   top: 60px;
   right: 0px;
   bottom: 0px;
-  left: 230px;
+  left: 210px;
   overflow-x: hidden;
   overflow-y: hidden;
-  padding: 0px 5px;
 	
 	/*min-height: 520px;
+	padding: 0px 5px;
 	height: 750px;
 	padding: 10px;
 	margin-left:220px;*/
+	
+	#path {
+		padding: 3px 10px;
+	}
 	
 	table {
 		border-collapse: collapse;
@@ -120,6 +134,7 @@ header {
 			background: #ccc;
 			cursor: pointer;
 		}
+		
 	}
 }
 
@@ -127,7 +142,7 @@ header {
 	position: absolute;
 	top: 45px;
 	bottom: 10px;
-	left: 0px;
+	left: 10px;
 	right: 10px;
 	overflow-y: scroll;
 }
@@ -136,24 +151,29 @@ header {
 	clear: both;
 }
 .button {
+	.stripedBd(14px);
+	
 	border: 1px solid #000000;
-	padding: 2px 5px;
-	background: #E0DFE3;
-	color: #000;
+	padding: 3px 6px;
+	color: #FF4422;
 	text-decoration: none;
+	font-weight: bold;
 	&#logout {
 		margin-right: 5px;
 		float:right;
 		position: relative;
-		bottom: 10px;
+		bottom: 15px;
 	}
 }
-h3 a {
-	display: block;
-	background-color: #ddd;
-	padding: 3px;
+h3 {
+	.stripedBd(14px); 
 	border-top: 1px dotted #aaa;
-	color: #ff4422;
+	a {
+		color: #ff4422;
+		display: block;
+		padding: 3px;
+		/*background-color: #ddd;*/
+	}
 }
 .hidden {
 	display: none;

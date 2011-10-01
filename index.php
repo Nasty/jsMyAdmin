@@ -57,7 +57,7 @@
 		Eingeloggt als: <b><?php echo $_SESSION['user']; ?></b><br />
 		seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
 		Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
-		<a href="logout.php" class="button" id="logout">[Logout]</a>
+		<a href="logout.php" class="button" id="logout">Logout</a>
 		<br class="cleardiv" />
 	</header>
   <div id="wrapper">
