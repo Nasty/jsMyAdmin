@@ -54,10 +54,17 @@
 </head>
 <body>
 	<header>
-		Eingeloggt als: <b><?php echo $_SESSION['user']; ?></b><br />
-		seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
-		Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
-		<a href="logout.php" class="button" id="logout">[Logout]</a>
+		<div id="headline">
+			jsMyAdmin
+		</div>
+		<a href="logout.php" class="button" id="logout">Logout</a>
+		<div id="loggedIn" class="button">Eingeloggt als: <?php echo $_SESSION['user']; ?>
+			<div>
+				<br />
+				seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
+				Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
+			</div>
+		</div>
 		<br class="cleardiv" />
 	</header>
   <div id="wrapper">
@@ -74,13 +81,14 @@
       </div>
     </div>
     <div id="content">
-		<h3 id="path"></h3>
-		<div id="head">
-			<button id="showTable" data-content="show_table" />Anzeigen</button>
-			<button id="showStructure" data-content="show_structure" class="active" />Struktur</button>
-			<button id="showStructure" data-content="show_sql" />SQL</button>
-			<button id="showStructure" data-content="show_search" />Suche</button>
-		</div>
+		<h3 id="path"><span style="float:left;"></span></h3>
+		<nav>
+			<a href="#" class="inactive" id="showTable" data-content="show_table">Anzeigen</a>
+			<a href="#" class="active" id="showStructure" data-content="show_structure">Struktur</a>
+			<a href="#" id="showStructure" data-content="show_sql">SQL</a>
+			<a href="#" id="showStructure" data-content="show_search">Suche</a>
+		</nav>
+		
 		<div id="show_table" style="display:none;"></div>
 		<div id="show_structure"></div>
 		<div id="show_sql" style="display:none;">SQL</div>

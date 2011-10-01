@@ -10,12 +10,12 @@ var options = {
 }
 var spinnerOpts = {
   lines: 16, // The number of lines to draw
-  length: 15, // The length of each line
-  width: 13, // The line thickness
+  length: 6, // The length of each line
+  width: 5, // The line thickness
   radius: 0, // The radius of the inner circle
   color: '#555', // #rbg or #rrggbb
   speed: 1, // Rounds per second
-  trail: 100, // Afterglow percentage
+  trail: 70, // Afterglow percentage
   shadow: false // Whether to render a shadow
 };
 
@@ -26,7 +26,7 @@ function mySort (node)
 
 $(document).ready(function()
 {     
-	$('<div id="spinner">').css({'position':'relative','margin':'20px auto 30px 50%', 'float':'left'}).spin(spinnerOpts).appendTo('#content').hide();
+	$('<div id="spinner">').css({'float':'left', 'marginLeft':'20px', 'marginTop':'8px'}).spin(spinnerOpts).appendTo('#path').hide().after('<br class="clear" />');
 	$('#databaseHeader').next().hide();
 	$('#tableHeader').next().hide();
 	
@@ -72,7 +72,7 @@ $(document).ready(function()
 	    	$('#selector #databases li').bind('click', function()
 	    	{
 				$('#spinner').show();
-				$('#head button').each(function(i){
+				$('nav a ').each(function(i){
 					$('#' + $(this).attr('data-content')).hide().removeClass('active');
 				})
 	    		selectedDb = this.id;
@@ -100,7 +100,7 @@ $(document).ready(function()
 	    				var result = jQuery.parseJSON(data);
 	    				var datas = result['result'];
 	    				
-						$('#content #path').html(options.selectedDb);
+						$('#content #path span').html(options.selectedDb);
 						$('#content #head').hide();
 	    				$('#content #show_structure').html(datas.html);
 	    				$('#content #show_structure thead').html(datas.tableHead);
@@ -155,11 +155,12 @@ $(document).ready(function()
 	    			data: {db: options.selectedDb, table: selectedTable},
 	    			async:true,
 	    			success: function(data)
-	    			{	
+	    			{
+	    				$('#showTable').removeClass('inactive'); // TODO: check if queried table has entries and remove class depending on that
 						options.selectedDb = selectedDb;
 						options.selectedTable = selectedTable;
 						
-						$('#head button').removeClass('active');
+						$('nav a ').removeClass('active');
 						$('#showStructure').addClass('active');
 						$('#content #show_structure').show();
 						$('#content #show_table').hide();
@@ -171,7 +172,7 @@ $(document).ready(function()
 	    				var result = jQuery.parseJSON(data);
 	    				var datas = result['result'];
 	    				
-	    				$('#content #path').html(options.selectedDb + ' &gt; ' + options.selectedTable);
+	    				$('#content #path span').html(options.selectedDb + ' &gt; ' + options.selectedTable);
 						$('#content #head').show();
 						
 						$('#content #show_structure').html(datas.html);
@@ -211,65 +212,69 @@ $(document).ready(function()
 	    	});
 			
 			$('#showTable').live('click', function(e){
-				if ($('#content #show_table').children().length == 0)
+				if (!($(this).hasClass('inactive')))
 				{
-					$('#spinner').show();
-					$.ajax({
-						url: 'service.php?cmd=showTable&mode=json',
-						type: "POST",
-						data: {db: options.selectedDb, table:  options.selectedTable},
-						success: function(data)
-						{
-							options.queryInProgress = true;
-							var result = jQuery.parseJSON(data);
-							var msg = result['result'];
-							
-							window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
-							var tableRow = 0;
-							var th = '';
-							var tableBody = '';
-							$('#content #show_table table').remove();
-						//	$('#content #show_table').append('');
-							var tbody = $('<table class="tablesort"><tbody id="contentBody"></tbody></table>');
-							$(msg.data).each(function(i,j)
-							{
-								tableBody = '';
-								th = '';
-								$.each(j, function(key,value)
-								{
-									th += '<th>' + key + '</th>';
-									tableRow = 1 - tableRow;
-									if (options.truncateData > 0 && value.length > options.truncateData)
-									{
-										tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
-									} else
-									{
-										tableBody += '<td data-size="' + value + '">' + value + '</td>';
-									}
-								})
-								tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
-							})
-							tbody.prepend('<tr>' + th + '</tr>');
-							$('#content #show_table').append(tbody);
-							options.count = parseInt(msg.info.count);
-							if (options.count > parseInt(msg.info.last))
-							{
-								$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
-								options.lastEntry = parseInt(msg.info.last);
-							}
-							options.queryInProgress = false;
-							$('#spinner').hide();
-							if ( ( $('#show_table').find('.tablesort').height() - $('#show_table').scrollTop() < ($('#show_table').height()+300) ) && options.count > parseInt(msg.info.last) && options.queryInProgress == false)
+					if ($('#content #show_table').children().length == 0)
+					{
+						$('#spinner').show();
+						$.ajax({
+							url: 'service.php?cmd=showTable&mode=json',
+							type: "POST",
+							data: {db: options.selectedDb, table:  options.selectedTable},
+							success: function(data)
 							{
 								options.queryInProgress = true;
-								$('#loadEntries').click();
+								var result = jQuery.parseJSON(data);
+								var msg = result['result'];
+								
+								window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
+								var tableRow = 0;
+								var th = '';
+								var tableBody = '';
+								$('#content #show_table table').remove();
+							//	$('#content #show_table').append('');
+								var tbody = $('<table class="tablesort"><tbody id="contentBody"></tbody></table>');
+								$(msg.data).each(function(i,j)
+								{
+									tableBody = '';
+									th = '';
+									$.each(j, function(key,value)
+									{
+										th += '<th>' + key + '</th>';
+										tableRow = 1 - tableRow;
+										if (options.truncateData > 0 && value.length > options.truncateData)
+										{
+											tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
+										} else
+										{
+											tableBody += '<td data-size="' + value + '">' + value + '</td>';
+										}
+									})
+									tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
+								})
+								tbody.prepend('<tr>' + th + '</tr>');
+								$('#content #show_table').append(tbody);
+								options.count = parseInt(msg.info.count);
+								if (options.count > parseInt(msg.info.last))
+								{
+									$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
+									options.lastEntry = parseInt(msg.info.last);
+								}
+								options.queryInProgress = false;
+								$('#spinner').hide();
+								if ( ( $('#show_table').find('.tablesort').height() - $('#show_table').scrollTop() < ($('#show_table').height()+300) ) && options.count > parseInt(msg.info.last) && options.queryInProgress == false)
+								{
+									options.queryInProgress = true;
+									$('#loadEntries').click();
+								}
 							}
-						}
-					})
+						})
+					}
+					$('#content #show_table').show();
+					$('#content #show_structure').hide();
 				}
-				$('#content #show_table').show();
-				$('#content #show_structure').hide();
 				e.preventDefault();
+				return false;
 			})
 			
 			
@@ -327,11 +332,11 @@ $(document).ready(function()
 				e.preventDefault();
 			})
 			
-			$('#head button').live('click', function(e){
-				$('#head button').removeClass('active');
+			$('nav a[class!="inactive"]').live('click', function(e){
+				$('nav a ').removeClass('active');
 				$(this).addClass('active');
 				//$('#content div[id!="head"]').hide().removeClass('active');
-				$('#head button').each(function(i){
+				$('nav a ').each(function(i){
 					$('#' + $(this).attr('data-content')).hide().removeClass('active');
 				})
 				$('#' + $(this).attr('data-content')).show();

@@ -1,6 +1,25 @@
+// --------LESS Values--------------------------
+
+.stripedBd (@radius) {
+	background-color: #DDDDDD;
+	background-image: -moz-linear-gradient(right top , transparent, transparent 15%, rgba(238, 238, 238, 0.5) 15%, rgba(238, 238, 238, 0.5) 50%, transparent 50%, transparent 65%, rgba(238, 238, 238, 0.5) 65%, rgba(238, 238, 238, 0.5));
+	background-size: @radius @radius;
+}
+
+@color1: #FF4422;
+
+// ---------------------------------------
+
+@font-face {
+	font-family: "Orbitron";
+	src: url('fonts/orbitron-bold.eot');
+	src: local('☺'),
+		 url('fonts/orbitron-bold.woff') format('woff'),
+		 url('fonts/orbitron-bold.ttf') format('truetype');
+}
+
 * {
-	font-family: arial;
-	font-size: 0.97em;
+	font: normal 0.97em Arial, sans-serif;
 	margin: 0px;
 	padding: 0px;
 	border: none;
@@ -19,6 +38,16 @@ header {
     font-size: 0.8em;
     padding: 5px;
     height: 49px;
+    
+    #headline {
+		font: italic 1.8em Orbitron, Arial, sans-serif;
+		position: absolute;
+		top: 18px;
+		left: 15px;
+		z-index:100;
+		color: @color1;
+		text-shadow: 3px 0 0 rgba(51, 51, 51, 1), 4px -4px 0 rgba(31, 31, 31, 1);
+	}
 }
 
 #wrapper {
@@ -81,15 +110,19 @@ header {
   top: 60px;
   right: 0px;
   bottom: 0px;
-  left: 230px;
+  left: 210px;
   overflow-x: hidden;
   overflow-y: hidden;
-  padding: 0px 5px;
 	
 	/*min-height: 520px;
+	padding: 0px 5px;
 	height: 750px;
 	padding: 10px;
 	margin-left:220px;*/
+	
+	#path {
+		padding: 3px 10px;
+	}
 	
 	table {
 		border-collapse: collapse;
@@ -120,14 +153,15 @@ header {
 			background: #ccc;
 			cursor: pointer;
 		}
+		
 	}
 }
 
 #content #show_table, #content #show_structure, #content #show_sql, #content #show_search {
 	position: absolute;
-	top: 45px;
+	top: 55px;
 	bottom: 10px;
-	left: 0px;
+	left: 10px;
 	right: 10px;
 	overflow-y: scroll;
 }
@@ -136,24 +170,69 @@ header {
 	clear: both;
 }
 .button {
+	.stripedBd(14px);
+	
 	border: 1px solid #000000;
-	padding: 2px 5px;
-	background: #E0DFE3;
-	color: #000;
+	padding: 3px 6px;
+	color: @color1;
 	text-decoration: none;
-	&#logout {
+	font-weight: bold;
+	&#logout, &#loggedIn {
 		margin-right: 5px;
 		float:right;
 		position: relative;
-		bottom: 10px;
+		top: 15px;
+		
+		div {
+			display: none;
+		}
 	}
 }
-h3 a {
-	display: block;
-	background-color: #ddd;
-	padding: 3px;
+h3 {
+	.stripedBd(14px); 
 	border-top: 1px dotted #aaa;
-	color: #ff4422;
+	a {
+		color: #ff4422;
+		display: block;
+		padding: 3px;
+	}
+}
+nav {
+	.stripedBd(14px); 
+	border-top: 1px dotted #aaa;
+	height: 16px;
+	padding-bottom: 6px;
+	
+	a {
+		display: block;
+		padding: 3px 10px;
+		float:left;
+		color: @color1;
+		text-decoration: none;
+		
+		&.active {
+			font-weight:bold;
+			background: #FFF;
+			margin-top:3px;
+			padding: 0 10px 3px 10px;
+		}
+		
+		&.inactive {
+			padding: 3px 10px;
+			color: #000;
+			cursor: default;
+		}
+		
+		&:last-of-type {
+			&:after {
+				content: ".";
+				display: block;
+				clear: both;
+				visibility: hidden
+				height: 0;
+			}
+		}
+	}
 }
 .hidden {
 	display: none;
