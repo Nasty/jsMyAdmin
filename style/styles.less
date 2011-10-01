@@ -8,9 +8,16 @@
 
 // ---------------------------------------
 
+@font-face {
+	font-family: "Orbitron";
+	src: url('fonts/orbitron-bold.eot');
+	src: local('☺'),
+		 url('fonts/orbitron-bold.woff') format('woff'),
+		 url('fonts/orbitron-bold.ttf') format('truetype');
+}
+
 * {
-	font-family: arial;
-	font-size: 0.97em;
+	font: normal 0.97em Arial, sans-serif;
 	margin: 0px;
 	padding: 0px;
 	border: none;
@@ -29,6 +36,16 @@ header {
     font-size: 0.8em;
     padding: 5px;
     height: 49px;
+    
+    #headline {
+		font: italic 1.8em Orbitron, Arial, sans-serif;
+		position: absolute;
+		top: 18px;
+		left: 15px;
+		z-index:100;
+		color: #ff4422;
+		text-shadow: 3px 0 0 rgba(51, 51, 51, 1), 4px -4px 0 rgba(31, 31, 31, 1);
+	}
 }
 
 #wrapper {
@@ -158,11 +175,15 @@ header {
 	color: #FF4422;
 	text-decoration: none;
 	font-weight: bold;
-	&#logout {
+	&#logout, &#loggedIn {
 		margin-right: 5px;
 		float:right;
 		position: relative;
-		bottom: 15px;
+		top: 15px;
+		
+		div {
+			display: none;
+		}
 	}
 }
 h3 {

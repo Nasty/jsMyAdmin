@@ -54,10 +54,17 @@
 </head>
 <body>
 	<header>
-		Eingeloggt als: <b><?php echo $_SESSION['user']; ?></b><br />
-		seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
-		Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
+		<div id="headline">
+			jsMyAdmin
+		</div>
 		<a href="logout.php" class="button" id="logout">Logout</a>
+		<div id="loggedIn" class="button">Eingeloggt als: <?php echo $_SESSION['user']; ?>
+			<div>
+				<br />
+				seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
+				Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
+			</div>
+		</div>
 		<br class="cleardiv" />
 	</header>
   <div id="wrapper">
