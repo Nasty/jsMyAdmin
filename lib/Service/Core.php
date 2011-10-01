@@ -157,6 +157,8 @@ class Service_Core
 
 		$columns = "";
 
+		$lengthArray = array();
+		
 		foreach($data['data'] as $key => $column)
 		{
 			switch ($column['attribute'])
@@ -166,6 +168,7 @@ class Service_Core
 				case 'tinyblob':
 				case 'mediumblob':
 					$columns .= " LENGTH(`" . $column['field'] . "`) AS `" . $column['field'] . "`, ";
+					$lengthArray[] = $column['field'];
 					break;
 				case 'varchar':
 				case 'text':
@@ -198,7 +201,14 @@ class Service_Core
 			$data = array();
 			foreach ($row as $key => $value)
 			{
-				$data[$key] = htmlentities($value);
+				if(in_array($key, $lengthArray))
+				{
+					$data[$key] = MakeSize($value);
+				}
+				else 
+				{
+					$data[$key] = htmlentities($value);	
+				}
 			}
 			$tables['data'][] = $data;
 		}
