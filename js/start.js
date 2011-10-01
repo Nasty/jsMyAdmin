@@ -7,6 +7,7 @@ var options = {
 	"limit" : 30,
 	"truncateData" : 50, //0 = no trucate
 	"queryInProgress" : false,
+	"animationSpeed" : "fast"
 }
 var spinnerOpts = {
   lines: 16, // The number of lines to draw
@@ -18,23 +19,183 @@ var spinnerOpts = {
   trail: 70, // Afterglow percentage
   shadow: false // Whether to render a shadow
 };
-
 function mySort (node)
 {
 	return node.getAttribute('data-size');
-}
+};
+
+function getDatabases ()
+{
+	$('#spinner').show();
+	$('#databaseHeader').next().hide().children().children().remove();
+	$('#tableHeader').next().hide(animationSpeed);
+	$('nav').find('a').removeClass('active').addClass('inactive');
+	$('#content').find('div[data-role="data-container"]').hide().children().remove();
+	$('#path').find('span').text('');
+	
+	$.ajax({
+		url: "service.php?cmd=getDatabases&mode=json",
+	    global: false,
+	    type: "POST",
+	    dataType: "json",
+	    async:true,
+	    success: function(data)
+	    {
+	    	for(i in  data['result']['data'])
+	    	{
+	    		var elem = $('<li>', {
+	    			"id": data['result']['data'][i].Database,
+	    			"text" : data['result']['data'][i].Database,
+	    			"data-database" : data['result']['data'][i].Database, 
+	    		});
+	    		$('#selector #databases').append(elem);
+	    	};
+	    	
+	    	$('#databaseHeader').next().show(options.animationSpeed);
+	    	$('#spinner').hide();
+	    }
+	});
+};
+
+function getTables (elem)
+{
+	elem = $(elem.target);
+	$('#spinner').show();
+	$('nav').find('a[id!=showTable]').removeClass('inactive');
+	$('#showStructure').addClass('active');
+
+	$.ajax(
+	{
+		url: "service.php?cmd=selectDatabase&mode=json",
+		global: false,
+		type: "POST",
+		data: {db: elem.data('database')},
+		async:true,
+		dataType: "json",
+		success: function(data)
+		{
+			options.selectedDb = elem.data('database');
+			options.selectedTable = false;
+			window.history.pushState(new Object(), "", "?db=" + options.selectedDb);
+			
+			$('#tableHeader a').html('Tables ( ' + options.selectedDb + ' )');
+			$('#selector #tables li').remove();
+			
+			$('#content').find('div[data-role="data-container"]').hide().children().remove();
+
+			var datas = data['result'];
+			
+			$('#content #path span').html(options.selectedDb);
+			$('#content #head').hide();
+			$('#content #show_structure').html(datas.html);
+			$('#content #show_structure thead').html(datas.tableHead);
+			
+			var tableRow = 0;
+			
+			$.each(data.result.data, function(key,value){
+				var li = $('<li>', {
+					"id" : value.name,
+					"data-table" : value.name,
+					"text" : value.name,
+				});
+				$('#selector').find('#tables').append(li);
+			})
+			$('#tableHeader').next().show(options.animationSpeed);
+			$('#databaseHeader').next().hide(options.animationSpeed);
+				
+			paintData(data.result, 'show_structure');
+	    	
+	    	$('#databaseHeader').next().hide(animationSpeed);
+	    	$('#tableHeader').next().show(animationSpeed);
+			$('.tablesort').tablesorter({textExtraction: mySort}); 
+			$('#content #show_structure').fadeIn(animationSpeed);
+			$('#spinner').hide();
+		}
+
+	});
+};
+
+function paintData (data, target)
+{
+	var tHead = $('<thead></thead>');
+	var row = $('<tr>');
+	$.each(data.header, function(key,value){
+		var th = $('<th>', {
+			"text" : value
+		});
+		row.append(th);
+	});
+	var table = $('<table>', {
+		"class" : "tablesort"
+	});
+	tHead.append(row);
+	table.append(tHead);
+
+	//TODO : auto append if table exists
+	var tBody = $('<tbody>', {
+		"id" : "contentBody",
+	});
+	
+	for(i in data.data)
+	{
+		var key = data.header[i];
+		var row = $('<tr>');
+		for (j in data.data[i])
+		{
+			var td = $('<td>', {
+				//TODO : check if blob or size field and use MakeSize here instead of in PHP
+				"text" :   data.data[i][j],
+			});
+			row.append(td);
+		};
+		
+		tBody.append(row);
+	};
+	table.append(tBody);
+	$('#' + target).show().append(table);
+};
+
+function makeSize (size)
+{
+	var value = "b";
+
+	if(parseInt(size) >= 1024)
+	{
+		size = Math.round(size / 1024).toFixed(2);
+		value = "KiB";
+	}
+	if(parseInt(size) >= 1024)
+	{
+		size = Math.round(size / 1024).toFixed(2);
+		value = "MiB";
+	}
+	if(parseInt(size) >= 1024)
+	{
+		size = Math.round(size / 1024).toFixed(2);
+		value = "GiB";
+	}
+	if(parseInt(size) == 0)
+	{
+		size = '-';
+		value = '';
+	}
+	return size + value;
+};
+
+
+
 
 $(document).ready(function()
 {     
 	$('<div id="spinner">').css({'float':'left', 'marginLeft':'20px', 'marginTop':'8px'}).spin(spinnerOpts).appendTo('#path').hide().after('<br class="clear" />');
+	getDatabases();
+	
 	$('#databaseHeader').next().hide();
 	$('#tableHeader').next().hide();
 	
 	$('#databaseHeader').click(function() 
 	{
-		$(this).next().show(animationSpeed);
-		$('#tableHeader').next().hide(animationSpeed);
-		return false;
+		getDatabases();
 	});
 	
 	$('#tableHeader').click(function() 
@@ -46,94 +207,11 @@ $(document).ready(function()
 		}
 		return false;
 	});
-	
-	$.ajax(
-	{
-		url: "service.php?cmd=getDatabases&mode=json",
-	    global: false,
-	    type: "POST",
-		//data: {host : 'localhost', user : 'jsmyadmin', pw : 'jsmyadmin'},
-	    async:true,
-	    success: function(data)
-	    {
-	    	var result = jQuery.parseJSON(data);
-	    	var databases = result['result'];
-	    	for(i in databases)
-	    	{
-	    		$('#selector #databases').append('<li id="' + databases[i] + '">' + databases[i] + '</li>');
-	    	}
-
-	    	if(trigger == null)
-	    	{
-	    		$('#databaseHeader').next().show(animationSpeed);
-	    	}
 	    	
 	    	
-	    	$('#selector #databases li').bind('click', function()
+	    	$('#selector #databases li').live('click', function(e)
 	    	{
-				$('#spinner').show();
-				$('nav a ').each(function(i){
-					$('#' + $(this).attr('data-content')).hide().removeClass('active');
-				})
-	    		selectedDb = this.id;
-	    		$.ajax(
-	    		{
-	    			url: "service.php?cmd=selectDatabase&mode=json",
-	    			global: false,
-	    			type: "POST",
-	    			data: {db: this.id},
-	    			async:true,
-	    			success: function(data)
-	    			{
-						options.selectedDb = selectedDb;
-						options.selectedTable = false;
-						
-	    				window.history.pushState(new Object(), "", "?db=" + options.selectedDb);
-	    				$('#tableHeader a').html('Tables ( ' + options.selectedDb + ' )');
-	    				$('#selector #tables li').remove();
-	    				
-	    				$('#content #show_structure table').remove();
-						$('#content #show_table table').remove();
-
-	    				$('#content #show_structure').hide(0);
-
-	    				var result = jQuery.parseJSON(data);
-	    				var datas = result['result'];
-	    				
-						$('#content #path span').html(options.selectedDb);
-						$('#content #head').hide();
-	    				$('#content #show_structure').html(datas.html);
-	    				$('#content #show_structure thead').html(datas.tableHead);
-	    				
-	    				var tables = datas.data; 
-	    				
-	    				var tableRow = 0;
-	    				
-	    		    	for(i in tables)
-	    		    	{
-	    		    		$('#selector #tables').append('<li id="' + tables[i].name + '">' + tables[i].name + '</li>');
-	    		    		
-	    		    		tableRow = 1 - tableRow;
-	    		    		
-	    		    		$('#contentBody').append(
-	    		    				'<tr class="tableRow' + tableRow + '">' + 
-	    		    				'<td data-size="' + tables[i].name + '">' + tables[i].name  + '</td>' +
-	    		    				'<td data-size="' + tables[i].records + '">' + tables[i].records  + '</td>' + 
-	    		    				'<td data-size="' + tables[i].engine + '">' + tables[i].engine  + '</td>' + 
-	    		    				'<td data-size="' + tables[i].collation + '">' + tables[i].collation  + '</td>' + 
-	    		    				'<td data-size="' + tables[i].realSize + '">' + tables[i].size  + '</td>' + 
-	    		    				'</tr>'
-	    		    		);
-	    		    	}
-	    		    	
-	    		    	$('#databaseHeader').next().hide(animationSpeed);
-	    		    	$('#tableHeader').next().show(animationSpeed);
-						$('.tablesort').tablesorter({textExtraction: mySort}); 
-						$('#content #show_structure').fadeIn(animationSpeed);
-						$('#spinner').hide();
-	    			}
-
-	    		});
+	    		getTables(e);
 	    	});
 			
 	    	$('#selector #tables li').live('click', function()
@@ -144,7 +222,7 @@ $(document).ready(function()
 					$('#content #show_structure').html('');
 				}
 				$('#spinner').show();
-				selectedTable = this.getAttribute('id');
+				options.selectedTable = this.getAttribute('id');
 				$('#selector #tables li').css('fontWeight', 'normal');
 				$(this).css('fontWeight', 'bold');
 	    		$.ajax(
@@ -152,13 +230,13 @@ $(document).ready(function()
 	    			url: "service.php?cmd=selectTable&mode=json",
 	    			global: false,
 	    			type: "POST",
-	    			data: {db: options.selectedDb, table: selectedTable},
+	    			data: {db: options.selectedDb, table: options.selectedTable},
 	    			async:true,
 	    			success: function(data)
 	    			{
 	    				$('#showTable').removeClass('inactive'); // TODO: check if queried table has entries and remove class depending on that
-						options.selectedDb = selectedDb;
-						options.selectedTable = selectedTable;
+					//	options.selectedDb = selectedDb;
+						//options.selectedTable = selectedTable;
 						
 						$('nav a ').removeClass('active');
 						$('#showStructure').addClass('active');
@@ -362,7 +440,5 @@ $(document).ready(function()
 					$('#tables #' + trigger.table).trigger('click');
 				}
 	    	}
-	    }
-	});
 	
 });

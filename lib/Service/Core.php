@@ -1,70 +1,73 @@
 <?php
 class Service_Core
 {
+	protected $db;
+	protected $serviceResult;
+
+	public function __construct()
+	{
+		$this->db = new Katharsis_Db5($_SESSION['host'], $_SESSION['user'], $_SESSION['pw']);
+		$this->db->connect();
+		$this->serviceResult = new Service_Result();
+	}
+	
+	public function isConntected ()
+	{
+		if (! $this->db->isConnected() )
+		{
+			header("Location: index.php");
+			exit();
+		}
+	}
+	
     public function getDatabases()
     {
-				$result = mysql_query("SHOW DATABASES;");
-				$table = array();
+    	$statement = "SHOW DATABASES;";
+    	$result = $this->db->fetchAll($statement);
 
-				while($row = mysql_fetch_array($result))
-				{
-					$databases[] = $row['Database'];
-				}
-
-				return $databases;
+    	$this->serviceResult->setData($result);
+    	$this->serviceResult->setInfo(count($result), 'count');
+		
+    	return $this->serviceResult->format();
     }
 
     public function selectDatabase($params)
     {
-    	if(isset($params['db']))
+    	if(!isset($params['db']))
+		{
+				die();
+		}
+		
+		    	if(!isset($params['db']))
+		{
+			die('a');
+		}
+
+			$statement = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $params['db'] . "';";
+			$result = $this->db->fetchAll($statement);
+			 
+			$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'));
+			$count = count($result);
+			$this->serviceResult->setInfo($count, 'count');
+			
+			if ($count > 0)
 			{
-				$db = mysql_escape_string($params['db']);
+				foreach ($result as $row)
+				{
+					$table = array();
+					$table['name'] = $row['TABLE_NAME'];
+					$table['records'] = $row['TABLE_ROWS'] == null ? '-' : $row['TABLE_ROWS'];
+					$table['engine'] = $row['ENGINE'] == null ? 'View' : $row['ENGINE'];
+					$table['collation'] = $row['TABLE_COLLATION'] == null ? '---' : $row['TABLE_COLLATION'];
+					$table['size'] = MakeSize($row['DATA_LENGTH']);
+				//	$table['realSize'] = $row['DATA_LENGTH'];
+					$tables[] = $table;
+				}
+				
+				$this->serviceResult->setData($tables);
+
 			}
-
-			$query = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $db . "';";
-
-			$result = mysql_query($query);
-
-			$table = array();
-
-			$tables = array();
-			$tables['html'] = '<table class="tablesort">
-			        <thead>
-			        </thead>
-			        <tbody id="contentBody">
-			        </tbody>
-			      </table>';
-			$tables['tableHead'] = '<tr class="tableRow0">
-			            <th>
-			              Table
-			            </th>
-			            <th>
-			              Records
-			            </th>
-			            <th>
-			              Type
-			            </th>
-			            <th>
-			              Collation
-			            </th>
-			            <th>
-			              Size
-			            </th>
-			          </tr>';
-
-			while($row = mysql_fetch_assoc($result))
-			{
-				$table[] = array();
-				$table['name'] = $row['TABLE_NAME'];
-				$table['records'] = $row['TABLE_ROWS'] == null ? '-' : $row['TABLE_ROWS'];
-				$table['engine'] = $row['ENGINE'] == null ? 'View' : $row['ENGINE'];
-				$table['collation'] = $row['TABLE_COLLATION'] == null ? '---' : $row['TABLE_COLLATION'];
-				$table['size'] = MakeSize($row['DATA_LENGTH']);
-				$table['realSize'] = $row['DATA_LENGTH'];
-				$tables['data'][] = $table;
-			}
-
-			return $tables;
+			return $this->serviceResult->format();
     }
 
     public function selectTable($params)

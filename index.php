@@ -84,15 +84,15 @@
 		<h3 id="path"><span style="float:left;"></span></h3>
 		<nav>
 			<a href="#" class="inactive" id="showTable" data-content="show_table">Anzeigen</a>
-			<a href="#" class="active" id="showStructure" data-content="show_structure">Struktur</a>
-			<a href="#" id="showStructure" data-content="show_sql">SQL</a>
-			<a href="#" id="showStructure" data-content="show_search">Suche</a>
+			<a href="#" class="inactive" id="showStructure" data-content="show_structure">Struktur</a>
+			<a href="#" class="inactive" id="showStructure" data-content="show_sql">SQL</a>
+			<a href="#" class="inactive" id="showStructure" data-content="show_search">Suche</a>
 		</nav>
 		
-		<div id="show_table" style="display:none;"></div>
-		<div id="show_structure"></div>
-		<div id="show_sql" style="display:none;">SQL</div>
-		<div id="show_search" style="display:none;">Suche</div>
+		<div id="show_table" data-role="data-container" style="display: none;"></div>
+		<div id="show_structure" data-role="data-container" style="display: none;"></div>
+		<div id="show_sql" data-role="container" style="display: none;">SQL</div>
+		<div id="show_search" data-role="container" style="display: none;">Suche</div>
     </div>
     <div class="clearDiv"><!--  --></div>
   </div>
