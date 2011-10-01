@@ -12,6 +12,11 @@ class Service_Result
 		$this->_result = array();
 	}
 	
+	public function _clear ()
+	{
+		$this->_result = array();
+	}
+	
 	public function format ()
 	{
 		$this->_result['header'] = $this->getHead();
@@ -20,9 +25,6 @@ class Service_Result
 		
 		return $this->getResult();
 	}
-	
-	
-	
 
 	/**
 	 * set $_head

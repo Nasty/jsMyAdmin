@@ -3,6 +3,8 @@ require_once 'lib/Service/Exception.php';
 require_once 'lib/Service/Messenger.php';
 require_once 'lib/Service/Interface.php';
 require_once 'lib/Service/Result.php';
+require_once 'lib/Database.php';
+
 
 class Service
 {
