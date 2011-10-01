@@ -92,14 +92,17 @@ function getTables (elem)
 			
 			var tableRow = 0;
 			
-			$.each(data.result.data, function(key,value){
-				var li = $('<li>', {
-					"id" : value.name,
-					"data-table" : value.name,
-					"text" : value.name,
-				});
-				$('#selector').find('#tables').append(li);
-			})
+			if (data.result.info.count > 0)
+			{
+				$.each(data.result.data, function(key,value){
+					var li = $('<li>', {
+						"id" : value.name,
+						"data-table" : value.name,
+						"text" : value.name,
+					});
+					$('#selector').find('#tables').append(li);
+				})
+			}
 			$('#tableHeader').next().show(options.animationSpeed);
 			$('#databaseHeader').next().hide(options.animationSpeed);
 				
@@ -130,27 +133,30 @@ function paintData (data, target)
 	});
 	tHead.append(row);
 	table.append(tHead);
-
-	//TODO : auto append if table exists
 	var tBody = $('<tbody>', {
 		"id" : "contentBody",
 	});
-	
-	for(i in data.data)
+
+	if (data.info.count > 0)
 	{
-		var key = data.header[i];
-		var row = $('<tr>');
-		for (j in data.data[i])
-		{
-			var td = $('<td>', {
-				//TODO : check if blob or size field and use MakeSize here instead of in PHP
-				"text" :   data.data[i][j],
-			});
-			row.append(td);
-		};
+		//TODO : auto append if table exists
 		
-		tBody.append(row);
-	};
+		for(i in data.data)
+		{
+			var key = data.header[i];
+			var row = $('<tr>');
+			for (j in data.data[i])
+			{
+				var td = $('<td>', {
+					//TODO : check if blob or size field and use MakeSize here instead of in PHP
+					"text" :   data.data[i][j],
+				});
+				row.append(td);
+			};
+			
+			tBody.append(row);
+		};
+	}
 	table.append(tBody);
 	$('#' + target).show().append(table);
 };
