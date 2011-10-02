@@ -37,4 +37,7 @@ catch (Exception $e)
 }
 
 $_SESSION['auth'] = 'true';
-header("Location: index.php");
+if ($_POST['true'] != 'true')
+{
+	header("Location: index.php");
+}

@@ -206,6 +206,11 @@ function showTable (elem)
 					$('#loadEntries').click();
 				}
 				$('#content #show_table').show();
+			},
+			statusCode: {
+				403: function () {
+					relogin(this);
+				}
 			}
 		});
 	};
@@ -261,6 +266,55 @@ function paintData (data, target)
 	}
 	table.append(tBody);
 	$('#' + target).show().prepend(table);
+};
+
+function relogin (xhr)
+{
+	var login = $('<div>', {
+		"id" : "login"
+	}).css({
+		"position" : "relative",
+		"top" : "20%",
+		"margin" : "0 auto",
+		"zIndex" : "999",
+		"width":"320",
+		"height":"200",
+		"backgroundColor":"transparent",
+		"backgroundImage":"none"
+	});
+	var container = $('<div>').css({'height':"180","background":"rgba(224, 224, 224, 0.9)"});
+	var header = $('<header>').append($('<div>',{"id":"headline","text":"jsMyAdmin"}));
+	var h3 = $('<h3>',{
+		"text" : "Your login session has expired."
+	}).css({"padding":"3px 5px","color":"#FF0000"});
+	var form = $('<form>', {"method":"post", "action":"login.php"});
+	var label1 = $('<label>', {"for":"rl_user", "text":"User:"});
+	var label2 = $('<label>', {"for":"rl_pw", "text":"Password:"});
+	var input1 = $('<input>', {"id":"rl_user", "type":"text"});
+	var input2 = $('<input>', {"id":"rl_pw", "type":"password"});
+	var that = xhr;
+	var input3 = $('<input>', {"id":"rl_pw", "type":"submit","value":"login"}).click(function(e){
+		$.ajax({
+			url : 'login.php',
+			type: "POST",
+			data: {user: $('#rl_user').val(), pw:$('#rl_pw').val(), relog:true},
+			success: function(){
+				$('#overlay').remove();
+				$('#login').remove();
+				$.ajax(that);
+			}
+		});
+		e.preventDefault();
+	});
+	container.append(header);
+	form.append(label1).append(input1).append(label2).append(input2).append(input3);
+	container.append(h3);
+	container.append(form);
+	login.append(container);
+	
+	var overlay = $('<div>',{"id":"overlay"});
+	$('html').append(overlay);
+	$('html').append(login);	
 };
 
 function makeSize (size)
