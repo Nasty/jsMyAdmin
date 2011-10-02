@@ -93,6 +93,19 @@
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
 		<div id="show_sql" data-role="container" style="display: none;">SQL</div>
 		<div id="show_search" data-role="container" style="display: none;">Suche</div>
+			
+			<div id="quicksearch" style="display:none;position: absolute; right:10px;left:10px;background: #ddd;z-index:10;bottom:0;padding:3px 10px;">
+				<h3>Quicksearch</h3>
+				<div>
+					<input type="radio" id="qsType" value="like" />Like<br />
+					<input type="radio" id="qsType" value="equals" />Equals<br />
+					
+					<ul id="qs_cols">
+					
+					</ul>
+					
+				</div>
+			</div>
     </div>
     <div class="clearDiv"><!--  --></div>
   </div>

@@ -37,104 +37,69 @@ class Service_Core
 		{
 				die();
 		}
+
+		$statement = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $params['db'] . "';";
+		$result = $this->db->fetchAll($statement);
+		 
+		$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'));
+		$count = count($result);
+		$this->serviceResult->setInfo($count, 'count');
 		
-		    	if(!isset($params['db']))
+		if ($count > 0)
 		{
-			die('a');
-		}
-
-			$statement = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $params['db'] . "';";
-			$result = $this->db->fetchAll($statement);
-			 
-			$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'));
-			$count = count($result);
-			$this->serviceResult->setInfo($count, 'count');
-			
-			if ($count > 0)
+			foreach ($result as $row)
 			{
-				foreach ($result as $row)
-				{
-					$table = array();
-					$table['name'] = $row['TABLE_NAME'];
-					$table['records'] = $row['TABLE_ROWS'] == null ? '-' : $row['TABLE_ROWS'];
-					$table['engine'] = $row['ENGINE'] == null ? 'View' : $row['ENGINE'];
-					$table['collation'] = $row['TABLE_COLLATION'] == null ? '---' : $row['TABLE_COLLATION'];
-					$table['size'] = MakeSize($row['DATA_LENGTH']);
-				//	$table['realSize'] = $row['DATA_LENGTH'];
-					$tables[] = $table;
-				}
-				
-				$this->serviceResult->setData($tables);
-
+				$table = array();
+				$table['name'] = $row['TABLE_NAME'];
+				$table['records'] = $row['TABLE_ROWS'] == null ? '-' : $row['TABLE_ROWS'];
+				$table['engine'] = $row['ENGINE'] == null ? 'View' : $row['ENGINE'];
+				$table['collation'] = $row['TABLE_COLLATION'] == null ? '---' : $row['TABLE_COLLATION'];
+				$table['size'] = MakeSize($row['DATA_LENGTH']);
+			//	$table['realSize'] = $row['DATA_LENGTH'];
+				$tables[] = $table;
 			}
-			return $this->serviceResult->format();
+			
+			$this->serviceResult->setData($tables);
+
+		}
+		return $this->serviceResult->format();
     }
 
     public function selectTable($params)
     {
-    	if(isset($params['db']) && isset($params['db']))
+	   	if(! isset($params['db']) || !isset($params['db']))
 		{
-			$table = mysql_escape_string($params['table']);
-			$db = mysql_escape_string($params['db']);
+			die();
 		}
+		
+		$statement = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . $params['db'] . "' AND TABLE_NAME = '" . $params['table'] . "';";
+		$result = $this->db->fetchAll($statement);
 
-		//$query = "SHOW FULL COLUMNS FROM " . $table . " FROM " . $db;
-		$query = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . $db . "' AND TABLE_NAME = '" . $table . "';";
-
-		$result = mysql_query($query);
+		$this->serviceResult->setHeader(array('Table','Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'));
+		$count = count($result);
+		$this->serviceResult->setInfo($count, 'count');
 
 		$table = array();
 		$tables = array();
-
-		$tables['html'] = '<table class="tablesort">
-		        <thead>
-		        </thead>
-		        <tbody id="contentBody">
-		        </tbody>
-		      </table>';
-		$tables['tableHead'] = '<tr class="tableRow0">
-					<th></th>
-		            <th>
-		              Field
-		            </th>
-		            <th>
-		              Type
-					</th>
-		            <th>
-		              Collation
-		            </th>
-		            <th>
-		              Attribute
-		            </th>
-		            <th>
-		              Null
-		            </th>
-					<th>
-					  Standard
-					</th>
-					<th>
-					  Extra
-					</th>
-					<th>
-					  Aktion
-					</th>
-		          </tr>';
-
-		while($row = mysql_fetch_assoc($result))
+		if ($count > 0)
 		{
-			$table[] = array();
-			$table['field'] = $row['COLUMN_NAME'];
-			$table['type'] = $row['COLUMN_TYPE'];
-			$table['collation'] = $row['COLLATION_NAME'];
-			$table['attribute'] = $row['DATA_TYPE'];
-			$table['null'] = $row['IS_NULLABLE'];
-			$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
-			$table['default'] = $row['COLUMN_DEFAULT'];
-			$table['extra'] = $row['EXTRA'];
-			$tables['data'][] = $table;
+			foreach ($result as $row)
+			{
+				$table = array();
+				$table['field'] = $row['COLUMN_NAME'];
+				$table['type'] = $row['COLUMN_TYPE'];
+				$table['collation'] = $row['COLLATION_NAME'];
+				$table['attribute'] = $row['DATA_TYPE'];
+				$table['null'] = $row['IS_NULLABLE'];
+				$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
+				$table['default'] = $row['COLUMN_DEFAULT'];
+				$table['extra'] = $row['EXTRA'];
+				$table['aktion'] = ''; //?
+				$tables[] = $table;
+			}
+			$this->serviceResult->setData($tables);
 		}
-
-		return $tables;
+		return $this->serviceResult->format();
     }
 
     public function showTable($params)

@@ -24,13 +24,20 @@ function mySort (node)
 	return node.getAttribute('data-size');
 };
 
+function hideContents ()
+{
+	$('nav').find('a').each(function(){
+		$('#' + $(this).data('content')).hide();
+	});
+};
+
 function getDatabases ()
 {
 	$('#spinner').show();
 	$('#databaseHeader').next().hide().children().children().remove();
 	$('#tableHeader').next().hide(animationSpeed);
 	$('nav').find('a').removeClass('active').addClass('inactive');
-	$('#content').find('div[data-role="data-container"]').hide().children().remove();
+	$('#content').find('div[data-role="data-container"]').hide().find('table').remove();
 	$('#path').find('span').text('');
 	
 	$.ajax({
@@ -81,16 +88,13 @@ function getTables (elem)
 			$('#tableHeader a').html('Tables ( ' + options.selectedDb + ' )');
 			$('#selector #tables li').remove();
 			
-			$('#content').find('div[data-role="data-container"]').hide().children().remove();
+			$('#content').find('div[data-role="data-container"]').find('table').remove();
 
 			var datas = data['result'];
 			
 			$('#content #path span').html(options.selectedDb);
 			$('#content #head').hide();
-			$('#content #show_structure').html(datas.html);
-			$('#content #show_structure thead').html(datas.tableHead);
-			
-			var tableRow = 0;
+			hideContents();
 			
 			if (data.result.info.count > 0)
 			{
@@ -101,6 +105,10 @@ function getTables (elem)
 						"text" : value.name,
 					});
 					$('#selector').find('#tables').append(li);
+					var li = $('<li>', {
+						"text" : key,
+					});
+					$('#qs_cols').append(li);
 				})
 			}
 			$('#tableHeader').next().show(options.animationSpeed);
@@ -115,6 +123,48 @@ function getTables (elem)
 			$('#spinner').hide();
 		}
 
+	});
+};
+
+function selectTable (elem)
+{
+	elem = $(elem.target);
+	$('#spinner').show();
+
+	if (elem.parent().attr('id') == 'tables')
+	{
+		$('#content #show_table').find('table').remove();
+		$('#content #show_structure').find('table').remove();
+	};
+	
+	options.selectedTable = elem.data('table');
+	$('#selector #tables li').css('fontWeight', 'normal');
+	elem.css('fontWeight', 'bold');
+	
+	$.ajax({
+		url: "service.php?cmd=selectTable&mode=json",
+		global: false,
+		type: "POST",
+		dataType: "json",
+		data: {db: options.selectedDb, table: options.selectedTable},
+		async:true,
+		success: function(data)
+		{
+			$('#showTable').removeClass('inactive'); // TODO: check if queried table has entries and remove class depending on that
+			$('nav a ').removeClass('active');
+			$('#showStructure').addClass('active');
+			hideContents();
+			
+			window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable);
+			
+			paintData(data.result, 'show_structure');
+			
+	    	$('#databaseHeader').next().hide(animationSpeed);
+	    	$('#tableHeader').next().show(animationSpeed);
+			$('.tablesort').tablesorter({textExtraction: mySort}); 
+			$('#content #show_structure').fadeIn(animationSpeed);
+			$('#spinner').hide();
+		}
 	});
 };
 
@@ -158,7 +208,7 @@ function paintData (data, target)
 		};
 	}
 	table.append(tBody);
-	$('#' + target).show().append(table);
+	$('#' + target).show().prepend(table);
 };
 
 function makeSize (size)
@@ -189,8 +239,6 @@ function makeSize (size)
 };
 
 
-
-
 $(document).ready(function()
 {     
 	$('<div id="spinner">').css({'float':'left', 'marginLeft':'20px', 'marginTop':'8px'}).spin(spinnerOpts).appendTo('#path').hide().after('<br class="clear" />');
@@ -214,91 +262,22 @@ $(document).ready(function()
 		return false;
 	});
 	    	
-	    	
-	    	$('#selector #databases li').live('click', function(e)
-	    	{
-	    		getTables(e);
-	    	});
-			
-	    	$('#selector #tables li').live('click', function()
-	    	{
-				if ($(this).parent().attr('id') == 'tables')
-				{
-					$('#content #show_table').html('');
-					$('#content #show_structure').html('');
-				}
-				$('#spinner').show();
-				options.selectedTable = this.getAttribute('id');
-				$('#selector #tables li').css('fontWeight', 'normal');
-				$(this).css('fontWeight', 'bold');
-	    		$.ajax(
-	    		{
-	    			url: "service.php?cmd=selectTable&mode=json",
-	    			global: false,
-	    			type: "POST",
-	    			data: {db: options.selectedDb, table: options.selectedTable},
-	    			async:true,
-	    			success: function(data)
-	    			{
-	    				$('#showTable').removeClass('inactive'); // TODO: check if queried table has entries and remove class depending on that
-					//	options.selectedDb = selectedDb;
-						//options.selectedTable = selectedTable;
-						
-						$('nav a ').removeClass('active');
-						$('#showStructure').addClass('active');
-						$('#content #show_structure').show();
-						$('#content #show_table').hide();
-	    				window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable);
-	    				$('#content #show_structure table').remove();
-
-	    				$('#content #show_structure').hide(0);
-
-	    				var result = jQuery.parseJSON(data);
-	    				var datas = result['result'];
-	    				
-	    				$('#content #path span').html(options.selectedDb + ' &gt; ' + options.selectedTable);
-						$('#content #head').show();
-						
-						$('#content #show_structure').html(datas.html);
-	    				$('#content #show_structure thead').html(datas.tableHead);
-	    				
-	    				var tables = datas.data; 
-	    				
-	    				var tableRow = 0;
-	    				
-	    		    	for(i in tables)
-	    		    	{
-	    		    		tableRow = 1 - tableRow;
-	    		    		
-	    		    		$('#contentBody').append(
-	    		    				'<tr class="tableRow' + tableRow + '">' + 
-									'<td><input type="checkbox" id="checkbox_row_' + tableRow + '" value="' + tables[i].field  + '" /></td>' +
-	    		    				'<td data-size="' + tables[i].field + '">' + tables[i].field  + '</td>' +
-	    		    				'<td data-size="' + tables[i].type + '">' + tables[i].type  + '</td>' + 
-	    		    				'<td data-size="' + tables[i].collation + '">' + tables[i].collation  + '</td>' + 
-	    		    				'<td data-size="' + tables[i].attribute + '">' + tables[i].attribute  + '</td>' + 
-									'<td data-size="' + tables[i].null + '">' + tables[i].null + '</td>' + 
-									'<td data-size="' + tables[i].default + '">' + tables[i].default + '</td>' + 
-	    		    				'<td data-size="' + tables[i].extra + '">' + tables[i].extra  + '</td>' + 
-									'<td data-size=""></td>' + 
-	    		    				'</tr>'
-	    		    		);
-	    		    	}
-	    		    	
-	    		    	$('#databaseHeader').next().hide(animationSpeed);
-	    		    	$('#tableHeader').next().show(animationSpeed);
-						$('.tablesort').tablesorter({textExtraction: mySort}); 
-						$('#content #show_structure').fadeIn(animationSpeed);
-						$('#spinner').hide();
-	    			}
-
-	    		});
-	    	});
+	$('#selector #databases li').live('click', function(e)
+	{
+		getTables(e);
+	});
+	
+	$('#selector #tables li').live('click', function(e)
+	{
+		selectTable(e);
+	});
+	
+	/*-----------*/
 			
 			$('#showTable').live('click', function(e){
 				if (!($(this).hasClass('inactive')))
 				{
-					if ($('#content #show_table').children().length == 0)
+					if ($('#content #show_table').find('table').length == 0)
 					{
 						$('#spinner').show();
 						$.ajax({
@@ -326,7 +305,7 @@ $(document).ready(function()
 									{
 										th += '<th>' + key + '</th>';
 										tableRow = 1 - tableRow;
-										if (options.truncateData > 0 && value.length > options.truncateData)
+										if (value != null && options.truncateData > 0 && value.length > options.truncateData)
 										{
 											tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
 										} else
