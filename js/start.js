@@ -107,10 +107,6 @@ function getTables (elem)
 						"text" : value.name,
 					});
 					$('#selector').find('#tables').append(li);
-					var li = $('<li>', {
-						"text" : key,
-					});
-					$('#qs_cols').append(li);
 				})
 			}
 			$('#tableHeader').next().show(options.animationSpeed);
@@ -138,6 +134,7 @@ function selectTable (elem)
 		$('#content #show_table').find('table').remove();
 		$('#content #show_structure').find('table').remove();
 		$('#loadEntries').remove();
+		$('#qs_cols').children().remove();
 	};
 	
 	options.selectedTable = elem.data('table');
@@ -190,6 +187,37 @@ function showTable (elem)
 				
 				paintData(data.result, 'show_table');
 				
+				$('#qs_cols').children().remove();
+				if ($('#qs_cols').children().length == 0)
+				{
+					$.each(data.result.header.cols, function(key,value){
+						var li = $('<li>');
+						var label = $('<label>').html(value).appendTo(li);
+						var input = $('<input>', {
+							"type" : "checkbox",
+							"value" : value,
+							"name" : "fields[]"
+						}).appendTo(label);
+						label.append(input);
+						$('#qs_cols').append(li);
+					})
+					$('#qs_submit').click(function(e){
+						var data = $(this).parent().serialize() + '&db=' + options.selectedDb + '&table=' + options.selectedTable;
+						$.ajax({
+							url: "service.php?cmd=qsearchTable&mode=json",
+							global: false,
+							type: "POST",
+							dataType: "json",
+							data: data,
+							async:true,
+							success: function(msg){
+								$('#show_table').find('table').remove();
+								paintData(msg.result, 'show_table');
+							}
+						});
+					});
+				}
+				
 				options.count = parseInt(data.result.info.count);
 				
 				if (options.count > parseInt(data.result.info.last))
@@ -229,7 +257,7 @@ function paintData (data, target)
 {
 	var tHead = $('<thead></thead>');
 	var row = $('<tr>');
-	$.each(data.header, function(key,value){
+	$.each(data.header.cols, function(key,value){
 		var th = $('<th>', {
 			"text" : value
 		});
@@ -344,6 +372,43 @@ function makeSize (size)
 	return size + value;
 };
 
+function showPopup (e, elem)
+{
+	var caller = $(e.target);
+	var popup = $('<p>', {
+		"class" : "triangle-isosceles",
+		"text" : "asd"
+	}).css({
+			'display':'none',
+			'top':e.layerY
+		});
+	var event = e;
+	$(document).bind('mousemove', function(e){
+		var scrollPos = $('#' + elem).scrollLeft();
+		var position = event.pageX -45-$('#' + elem).offset().left;
+		var pageX = e.pageX -45+$('#' + elem).scrollLeft()-$('#' + elem).offset().left;
+		var pageY = e.pageY+$('#' + elem).scrollTop();
+		if (e.pageX-$('#' + elem).offset().left+280 > $('#' + elem).width())
+		{
+			popup.addClass('l');
+			popup.css({
+				"right":($('#' + elem).width()-pageX-110),
+				"top" : pageY-$('#' + elem).offset().top+15
+				});
+		} else
+		{
+			popup.addClass('r');
+			popup.css({
+				"left":pageX,
+				"top" : pageY-$('#' + elem).offset().top+15
+				});
+		};
+	})
+	popup.appendTo(caller).delay(500).show(250, function(){
+		$(document).unbind('mousemove');
+	});	
+}
+
 
 $(document).ready(function()
 {     
@@ -394,7 +459,12 @@ $(document).ready(function()
 			});
 			
 			$('#show_table').find('table').find('tr').find('td').live('mouseenter', function(e){
-				$(this).append('<p class="triangle-isosceles" style="left:' + (e.clientX - $('#show_table').offset().left-25) + 'px;">asd</p>');
+				showPopup(e, 'show_table');
+			}).live('mouseleave', function(){
+				$(this).find('.triangle-isosceles').remove();
+			});
+			$('#show_structure').find('table').find('tr').find('td').live('mouseenter', function(e){
+				showPopup(e, 'show_structure');
 			}).live('mouseleave', function(){
 				$(this).find('.triangle-isosceles').remove();
 			});

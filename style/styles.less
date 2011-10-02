@@ -303,10 +303,10 @@ nav {
 
 .triangle-isosceles {
 	z-index:100;
-	min-width: 250px;
+	width: 250px;
 	position:absolute;
 	padding:15px;
-	margin:0.8em 0 3em;
+	margin:0 0 3em;
 	color:#000;
 	.stripedBd(14px);
 
@@ -317,17 +317,21 @@ nav {
 	position:absolute;
 	bottom:-15px; 
 	left:50px;
-	border-width:15px 15px 0;
 	border-style:solid;
 	border-color:#f3961c transparent;
     display:block; 
     width:0;
-		top:-15px;
-		left:50px;
-		bottom:auto;
-		left:auto;
-		border-width:0 15px 15px;
-		border-color:#DDDDDD transparent;
+	top:-15px;
+	bottom:auto;
+	left:auto;
+	border-width:0 15px 15px;
+	border-color:#DDDDDD transparent;
+	}
+	&.l:after {
+		right:30px;
+	}
+	&.r:after {
+		left:30px;
 	}
 }
 

@@ -41,7 +41,7 @@ class Service_Core
 		$statement = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $params['db'] . "';";
 		$result = $this->db->fetchAll($statement);
 		 
-		$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'));
+		$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
 		
@@ -75,7 +75,7 @@ class Service_Core
 		$statement = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . $params['db'] . "' AND TABLE_NAME = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
 
-		$this->serviceResult->setHeader(array('Table','Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'));
+		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
 
@@ -91,7 +91,7 @@ class Service_Core
 				$table['collation'] = $row['COLLATION_NAME'];
 				$table['attribute'] = $row['DATA_TYPE'];
 				$table['null'] = $row['IS_NULLABLE'];
-				$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
+				//$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
 				$table['default'] = $row['COLUMN_DEFAULT'];
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
@@ -104,31 +104,20 @@ class Service_Core
 
     public function showTable($params)
     {
-		$startTime = microtime (true);
-    	if(isset($params['db']) && isset($params['table']))
+    	if(!isset($params['db']) || !isset($params['table']))
 		{
-			$table = mysql_escape_string($params['table']);
-			$db = mysql_escape_string($params['db']);
-			mysql_select_db($db);
-
-			$data = $this->selectTable($params);
+			die();
 		}
-
+		$this->db->setDatabase($params['db']);
 		$serviceResult = new Service_Result();
-
-
-		$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
-		$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
-
-		$serviceResult->setInfo($offset, 'offset');
-		$serviceResult->setInfo($limit, 'limit');
-
-		$columns = "";
+		$data = $this->selectTable($params);
 
 		$lengthArray = array();
-		
+		$columns = "";
+		$headers = array();
 		foreach($data['data'] as $key => $column)
 		{
+			$headers[] = $column['field'];
 			switch ($column['attribute'])
 			{
 				case 'longblob':
@@ -152,36 +141,26 @@ class Service_Core
 					$columns .= " `" . $column['field'] . "`, ";
 			}
 		}
-
+		$serviceResult->setHeader($headers, 'cols');
 		$columns = substr($columns, 0, -2) . " ";
 
-		$query = "SELECT " . $columns .
-				 "FROM `" . $table . "` " .
-				 "ORDER BY 1 " .
-				 "LIMIT " . $offset . " , " . $limit;
+		$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
+		$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
+		
+		$statement = "SELECT " . $columns .
+					 "FROM `" . $params['table'] . "` " .
+					 "ORDER BY 1 " .
+					 "LIMIT " . $offset . " , " . $limit;
+		$result = $this->db->fetchAll($statement);
+		
 
-		$result = mysql_query($query);
 		$data = array();
 		$tables = array();
-
-		$headers = array();
-		$i = 0;
-		while($row = mysql_fetch_assoc($result))
+		foreach ($result as $row)
 		{
 			$data = array();
 			foreach ($row as $key => $value)
 			{
-				if ($i == 0)
-				{
-					if(in_array($key, $lengthArray))
-					{
-						$headers[] = $key;
-					}
-					else 
-					{
-						$headers[] = $key;
-					}
-				}
 				if(in_array($key, $lengthArray))
 				{
 					$data[$key] = MakeSize($value);
@@ -191,29 +170,63 @@ class Service_Core
 					$data[$key] = utf8_encode($value);	
 				}
 			}
-			$i++;
 			$tables['data'][] = $data;
 		}
 		
-		$serviceResult->setHeader($headers);
-
 		$serviceResult->setData($tables['data']);
 
-		$query = "SELECT COUNT(*) AS count FROM `" . $table . "`";
-		$result = mysql_query($query);
-		$row = mysql_fetch_assoc($result);
+		$statement = "SELECT COUNT(*) AS count FROM `" . $params['table'] . "`";
+		$count = $this->db->fetchOne($statement);
 
-		$tables['info']['count'] = $row['count'];
-		$tables['info']['last'] = count($tables['data']) + $offset;
-
-		$serviceResult->setInfo($row['count'], 'count');
+		$serviceResult->setInfo($count['count'], 'count');
 		$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
+		$serviceResult->setInfo($offset, 'offset');
+		$serviceResult->setInfo($limit, 'limit');
 		
-		$endTime = microtime (true);
-		$serviceResult->setInfo(($endTime - $startTime), 'execTime');
+		return $serviceResult->format();
+    }
+    
+    public function qsearchTable ($params)
+    {
+        if(!isset($params['db']) || !isset($params['table']))
+		{
+			die();
+		}
+		$this->db->setDatabase($params['db']);
+		$data = $this->selectTable($params);
+		$headers = array();
+		foreach($data['data'] as $key => $column)
+		{
+			$headers[] = $column['field'];
+		}
+		$this->serviceResult->setHeader($headers, 'cols');
 		
-		$format = $serviceResult->format();
-		return $format;
-		//return $tables;
+		$statement = "SELECT * ";
+		$statement .= "FROM " . $params['table'] . " WHERE "; 
+		foreach ($params['fields'] as $field)
+		{
+			$statement .= "`" . $field . "` ";
+			switch (strtoupper($params['qs_type']))
+			{
+				case 'LIKE':
+					$statement .= "LIKE '%" . urldecode($params['qs_search']) . "%' OR ";
+					break;
+				case 'EQUALS':
+					$statement .= "= '" . urldecode($params['qs_search']) . "' OR ";
+					break;
+			}
+		}
+		
+		$statement = substr($statement, 0, -4) .";";
+		
+		$result = $this->db->fetchAll($statement);
+		
+		if (count($result) > 0)
+		{
+			$this->serviceResult->setData($result);
+		}
+		$this->serviceResult->setInfo(count($result), 'count');
+		
+		return $this->serviceResult->format();
     }
 }

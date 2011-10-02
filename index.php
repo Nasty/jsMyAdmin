@@ -97,13 +97,16 @@
 			<div id="quicksearch" style="display:none;position: absolute; right:10px;left:10px;background: #ddd;z-index:10;bottom:0;padding:3px 10px;">
 				<h3>Quicksearch</h3>
 				<div>
-					<input type="radio" id="qsType" value="like" />Like<br />
-					<input type="radio" id="qsType" value="equals" />Equals<br />
-					
-					<ul id="qs_cols">
-					
-					</ul>
-					
+					<form action="service.php?cmd=qsearchTable&mode=json" method="POST">
+						<input type="radio" name="qs_type" value="like" />Like<br />
+						<input type="radio" name="qs_type" value="equals" />Equals<br />
+						
+						<ul id="qs_cols">
+						
+						</ul>
+						<input type="text" name="qs_search" id="qs_search" />
+						<input type="button" value="search" id="qs_submit" />
+					</form>
 				</div>
 			</div>
     </div>
