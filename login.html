@@ -3,40 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>jsMyAdmin - Login</title>
-  
-  <link rel="stylesheet" type="text/css" href="style/login.css" />
+	<link rel="stylesheet/less" type="text/css" href="style/styles.less">
+	<script type="text/javascript" src="js/less-1.1.3.min.js"></script>
 </head>
 <body>
-  <div id="wrapper">
-    <div id="container">
-     jsMyAdmin
-     <hr/>
-      <form action="login.php" method="post">
-        <table>
-          <tr>
-            <td>
-              User:
-            </td>
-            <td>
-              <input type="text" name="user" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              Password:
-            </td>
-            <td>
-              <input type="password" name="pw" />
-            </td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <input id="button" type="submit" value="login" />
-            </td>
-          </tr>
-        </table>
-      </form>
-    </div>
-  </div>
+		<div id="login">
+		    <header>
+			    <div id="headline">
+				     jsMyAdmin
+			    </div>
+		    </header>
+			<form action="login.php" method="post">
+				<label for="user">User: </label>
+				<input type="text" name="user"  id="user" />
+				<label for="pw">Password: </label>
+				<input type="password" name="pw"  id="pw" />
+				<input type="submit" value="login" />
+			</form>
+		</div>
 </body>
 </html>
