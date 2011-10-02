@@ -164,22 +164,38 @@ class Service_Core
 		$data = array();
 		$tables = array();
 
+		$headers = array();
+		$i = 0;
 		while($row = mysql_fetch_assoc($result))
 		{
 			$data = array();
 			foreach ($row as $key => $value)
 			{
+				if ($i == 0)
+				{
+					if(in_array($key, $lengthArray))
+					{
+						$headers[] = $key;
+					}
+					else 
+					{
+						$headers[] = $key;
+					}
+				}
 				if(in_array($key, $lengthArray))
 				{
 					$data[$key] = MakeSize($value);
 				}
 				else 
 				{
-					$data[$key] = htmlentities($value);	
+					$data[$key] = utf8_encode($value);	
 				}
 			}
+			$i++;
 			$tables['data'][] = $data;
 		}
+		
+		$serviceResult->setHeader($headers);
 
 		$serviceResult->setData($tables['data']);
 

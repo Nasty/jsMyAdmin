@@ -38,6 +38,7 @@ function getDatabases ()
 	$('#tableHeader').next().hide(animationSpeed);
 	$('nav').find('a').removeClass('active').addClass('inactive');
 	$('#content').find('div[data-role="data-container"]').hide().find('table').remove();
+	$('#loadEntries').remove();
 	$('#path').find('span').text('');
 	
 	$.ajax({
@@ -89,6 +90,7 @@ function getTables (elem)
 			$('#selector #tables li').remove();
 			
 			$('#content').find('div[data-role="data-container"]').find('table').remove();
+			$('#loadEntries').remove();
 
 			var datas = data['result'];
 			
@@ -135,6 +137,7 @@ function selectTable (elem)
 	{
 		$('#content #show_table').find('table').remove();
 		$('#content #show_structure').find('table').remove();
+		$('#loadEntries').remove();
 	};
 	
 	options.selectedTable = elem.data('table');
@@ -167,6 +170,55 @@ function selectTable (elem)
 		}
 	});
 };
+
+function showTable (elem)
+{
+	elem = $(elem.target);
+	if (!($(this).hasClass('inactive')) && $('#content #show_table').find('table').length == 0)
+	{
+		$('#spinner').show();
+		$.ajax({
+			url: 'service.php?cmd=showTable&mode=json',
+			type: "POST",
+			dataType : "json",
+			data: {db: options.selectedDb, table:  options.selectedTable},
+			success: function(data)
+			{
+				options.queryInProgress = true;
+				window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
+				hideContents();
+				
+				paintData(data.result, 'show_table');
+				
+				options.count = parseInt(data.result.info.count);
+				
+				if (options.count > parseInt(data.result.info.last))
+				{
+					$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
+					options.lastEntry = parseInt(data.result.info.last);
+				}
+				options.queryInProgress = false;
+				$('#spinner').hide();
+				
+				if ( ( $('#show_table').find('.tablesort').height() - $('#show_table').scrollTop() < ($('#show_table').height()+300) ) && options.count > parseInt(data.result.info.last) && options.queryInProgress == false)
+				{
+					options.queryInProgress = true;
+					$('#loadEntries').click();
+				}
+				$('#content #show_table').show();
+			}
+		});
+	};
+	return false;
+};
+
+
+
+
+
+
+
+
 
 function paintData (data, target)
 {
@@ -275,69 +327,7 @@ $(document).ready(function()
 	/*-----------*/
 			
 			$('#showTable').live('click', function(e){
-				if (!($(this).hasClass('inactive')))
-				{
-					if ($('#content #show_table').find('table').length == 0)
-					{
-						$('#spinner').show();
-						$.ajax({
-							url: 'service.php?cmd=showTable&mode=json',
-							type: "POST",
-							data: {db: options.selectedDb, table:  options.selectedTable},
-							success: function(data)
-							{
-								options.queryInProgress = true;
-								var result = jQuery.parseJSON(data);
-								var msg = result['result'];
-								
-								window.history.pushState(new Object(), "", "?db=" + options.selectedDb + '&table=' + options.selectedTable + '&action=show');
-								var tableRow = 0;
-								var th = '';
-								var tableBody = '';
-								$('#content #show_table table').remove();
-							//	$('#content #show_table').append('');
-								var tbody = $('<table class="tablesort"><tbody id="contentBody"></tbody></table>');
-								$(msg.data).each(function(i,j)
-								{
-									tableBody = '';
-									th = '';
-									$.each(j, function(key,value)
-									{
-										th += '<th>' + key + '</th>';
-										tableRow = 1 - tableRow;
-										if (value != null && options.truncateData > 0 && value.length > options.truncateData)
-										{
-											tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
-										} else
-										{
-											tableBody += '<td data-size="' + value + '">' + value + '</td>';
-										}
-									})
-									tbody.append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
-								})
-								tbody.prepend('<tr>' + th + '</tr>');
-								$('#content #show_table').append(tbody);
-								options.count = parseInt(msg.info.count);
-								if (options.count > parseInt(msg.info.last))
-								{
-									$('#content #show_table table').after('<a href="#" id="loadEntries" class="button">load more entries...</a>');
-									options.lastEntry = parseInt(msg.info.last);
-								}
-								options.queryInProgress = false;
-								$('#spinner').hide();
-								if ( ( $('#show_table').find('.tablesort').height() - $('#show_table').scrollTop() < ($('#show_table').height()+300) ) && options.count > parseInt(msg.info.last) && options.queryInProgress == false)
-								{
-									options.queryInProgress = true;
-									$('#loadEntries').click();
-								}
-							}
-						})
-					}
-					$('#content #show_table').show();
-					$('#content #show_structure').hide();
-				}
-				e.preventDefault();
-				return false;
+				showTable(e);
 			})
 			
 			
@@ -347,7 +337,13 @@ $(document).ready(function()
 					options.queryInProgress = true;
 					$('#loadEntries').click();
 				}
-			})
+			});
+			
+			$('#show_table').find('table').find('tr').find('td').live('mouseenter', function(e){
+				$(this).append('<p class="triangle-isosceles" style="left:' + (e.clientX - $('#show_table').offset().left-25) + 'px;">asd</p>');
+			}).live('mouseleave', function(){
+				$(this).find('.triangle-isosceles').remove();
+			});
 			
 			$('#loadEntries').live('click', function(e){
 				$('#spinner').show();
