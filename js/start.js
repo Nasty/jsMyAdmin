@@ -61,6 +61,8 @@ function getDatabases ()
 	    	
 	    	$('#databaseHeader').next().show(options.animationSpeed);
 	    	$('#spinner').hide();
+	    	
+	    	$('#quicksearch').find('h4').find('span').removeClass('active');
 	    }
 	});
 };
@@ -119,6 +121,8 @@ function getTables (elem)
 			$('.tablesort').tablesorter({textExtraction: mySort}); 
 			$('#content #show_structure').fadeIn(animationSpeed);
 			$('#spinner').hide();
+			
+			$('#quicksearch').find('h4').find('span').removeClass('active');
 		}
 
 	});
@@ -164,6 +168,8 @@ function selectTable (elem)
 			$('.tablesort').tablesorter({textExtraction: mySort}); 
 			$('#content #show_structure').fadeIn(animationSpeed);
 			$('#spinner').hide();
+			
+			$('#quicksearch').find('h4').find('span').removeClass('active');
 		}
 	});
 };
@@ -188,6 +194,7 @@ function showTable (elem)
 				paintData(data.result, 'show_table');
 				
 				$('#qs_cols').children().remove();
+				$('#qs_submit').unbind('click');
 				if ($('#qs_cols').children().length == 0)
 				{
 					$.each(data.result.header.cols, function(key,value){
@@ -200,8 +207,10 @@ function showTable (elem)
 						}).appendTo(label);
 						label.append(input);
 						$('#qs_cols').append(li);
+						$('#quicksearch').find('h4').find('span').addClass('active');
 					})
 					$('#qs_submit').click(function(e){
+						$('#spinner').show();
 						var data = $(this).parent().serialize() + '&db=' + options.selectedDb + '&table=' + options.selectedTable;
 						$.ajax({
 							url: "service.php?cmd=qsearchTable&mode=json",
@@ -212,7 +221,9 @@ function showTable (elem)
 							async:true,
 							success: function(msg){
 								$('#show_table').find('table').remove();
+								$('#loadEntries').remove();
 								paintData(msg.result, 'show_table');
+								$('#spinner').hide();
 							}
 						});
 					});
@@ -443,11 +454,16 @@ $(document).ready(function()
 		selectTable(e);
 	});
 	
+	$('#showTable').live('click', function(e){
+		showTable(e);
+	});
+
+	$('#quicksearch').find('h4').find('span').click(function(e){
+		$(this).parent().next().toggle(250);
+	});
+	
 	/*-----------*/
 			
-			$('#showTable').live('click', function(e){
-				showTable(e);
-			})
 			
 			
 			$('#show_table').scroll(function(){
@@ -532,6 +548,8 @@ $(document).ready(function()
 				e.preventDefault();
 				return false;
 			})
+			
+
 			
 	    	
 	    	if(trigger != null)
