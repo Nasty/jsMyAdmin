@@ -219,7 +219,8 @@ header {
 	bottom: 10px;
 	left: 10px;
 	right: 10px;
-	bottom: 22px;
+	/*bottom: 22px;*/
+	bottom: 0px;
 	overflow-y: scroll;
 	&.panelOpen {
 		bottom: 112px
@@ -312,6 +313,7 @@ nav {
 	bottom:0;
 	border-left:1px solid #000;
 	border-right:1px solid #000;
+	display: none;
 	h4 {
 		height:22px;
 		background: #000;
@@ -328,8 +330,13 @@ nav {
 		}
 	}
 	>div {
-		padding: 3px 10px;
-		display:none;
+		padding: 0 10px;
+		overflow: hidden;
+		height: 0px;
+		
+		>form {
+			padding: 3px 0;
+		}
 	}
 	ul {
 		list-style-type: none;
