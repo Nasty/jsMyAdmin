@@ -1,6 +1,6 @@
 h1. Main
 
-Like the name suggests jsMyAdmin  is similar to "phpyAdmin".
+Like the name suggests jsMyAdmin  is similar to "phpMyAdmin".
 It's primary prupose is to access, maintain and manage databases and their respective contents.
 Unlike phpMyAdmin, jsMyAdmin is heavily based on javaScript (hence the name jsMyAdmin), in particular the jQuery framwork, to provide a very modern and comfortable interface for the user.
 
