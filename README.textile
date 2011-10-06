@@ -24,4 +24,5 @@ First UI draft is completed.
 h1. Thanks to 
 * "Logsol for WebService Framework used in here":https://github.com/logsol/WebService-Framework
 * "Logsol for database class used in his MVC Framework":https://github.com/logsol/Katharsis-Framework
+* "fgnass for spin.js, a pure javascript spinner animation":https://github.com/fgnass/spin.js
 * "jQuery":https://github.com/jquery/jquery
