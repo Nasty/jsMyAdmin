@@ -8,7 +8,7 @@ var options = {
 	"truncateData" : 50, //0 = no trucate
 	"queryInProgress" : false,
 	"animationSpeed" : "fast"
-}
+};
 var spinnerOpts = {
   lines: 16, // The number of lines to draw
   length: 6, // The length of each line
@@ -40,6 +40,7 @@ function getDatabases ()
 	$('#content').find('div[data-role="data-container"]').hide().find('table').remove();
 	$('#loadEntries').remove();
 	$('#path').find('span').text('');
+	$('#showDesign').removeClass('active').addClass('hidden');
 	
 	$.ajax({
 		url: "service.php?cmd=getDatabases&mode=json",
@@ -54,7 +55,7 @@ function getDatabases ()
 	    		var elem = $('<li>', {
 	    			"id": data['result']['data'][i].Database,
 	    			"text" : data['result']['data'][i].Database,
-	    			"data-database" : data['result']['data'][i].Database, 
+	    			"data-database" : data['result']['data'][i].Database
 	    		});
 	    		$('#selector #databases').append(elem);
 	    	};
@@ -73,6 +74,7 @@ function getTables (elem)
 	$('#spinner').show();
 	$('nav').find('a[id!=showTable]').removeClass('inactive');
 	$('#showStructure').addClass('active');
+	$('#showDesign').removeClass('hidden');
 
 	$.ajax(
 	{
@@ -106,10 +108,10 @@ function getTables (elem)
 					var li = $('<li>', {
 						"id" : value.name,
 						"data-table" : value.name,
-						"text" : value.name,
+						"text" : value.name
 					});
 					$('#selector').find('#tables').append(li);
-				})
+				});
 			}
 			$('#tableHeader').next().show(options.animationSpeed);
 			$('#databaseHeader').next().hide(options.animationSpeed);
@@ -130,6 +132,7 @@ function getTables (elem)
 
 function selectTable (elem)
 {
+	$('#showDesign').removeClass('active').addClass('hidden');
 	elem = $(elem.target);
 	$('#spinner').show();
 
@@ -208,7 +211,7 @@ function showTable (elem)
 						label.append(input);
 						$('#qs_cols').append(li);
 						$('#quicksearch').find('h4').find('span').addClass('active');
-					})
+					});
 					$('#qs_submit').click(function(e){
 						$('#spinner').show();
 						var data = $(this).parent().serialize() + '&db=' + options.selectedDb + '&table=' + options.selectedTable;
@@ -257,13 +260,6 @@ function showTable (elem)
 };
 
 
-
-
-
-
-
-
-
 function paintData (data, target)
 {
 	var tHead = $('<thead></thead>');
@@ -280,7 +276,7 @@ function paintData (data, target)
 	tHead.append(row);
 	table.append(tHead);
 	var tBody = $('<tbody>', {
-		"id" : "contentBody",
+		"id" : "contentBody"
 	});
 
 	if (data.info.count > 0)
@@ -295,7 +291,7 @@ function paintData (data, target)
 			{
 				var td = $('<td>', {
 					//TODO : check if blob or size field and use MakeSize here instead of in PHP
-					"text" :   data.data[i][j],
+					"text" :   data.data[i][j]
 				});
 				row.append(td);
 			};
@@ -458,6 +454,10 @@ $(document).ready(function()
 		showTable(e);
 	});
 
+	$('#showDesign').live('click', function(e){
+		getDesignData(e);
+	});
+	
 	/*$('#quicksearch').find('h4').find('span').toggle(function(){
 		$(this).parent().next().animate({'height': 90},250);
 		$('#content').find('div[data-role="data-container"]').animate({'bottom':122}, 250);
@@ -569,3 +569,87 @@ $(document).ready(function()
 	    	}
 	
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function getDesignData ()
+{
+	$('#spinner').show();
+
+	$.ajax({
+		url: "service.php?cmd=getDesignData&mode=json",
+		global: false,
+		type: "POST",
+		dataType: "json",
+		data: {db: options.selectedDb},
+		async:true,
+		success: function(data)
+		{
+			$('#content #show_design .table').remove();
+			
+			$('#content #show_design').fadeIn(animationSpeed);
+			$('#spinner').hide();
+			
+			for(i in  data['result']['data'])
+	    	{
+				var table = $('<div>', {
+	    			"class" : "table"
+	    		});
+				
+				var tableName = $('<p>', {
+	    			"text" : i
+	    		}).appendTo(table);
+				
+				var list = $('<ul>', {
+					
+				}).appendTo(table);
+				
+				for(j in  data['result']['data'][i])
+		    	{
+					var listItem = $('<li>', {
+						"text" : data['result']['data'][i][j]['field']
+					}).appendTo(list);
+		    	}
+				
+	    		$('#show_design').append(table);
+	    	}
+
+			$('#show_design .table').draggable(
+			{
+				draggable: true,
+				opacity: 0.5,
+				cursor: 'crosshair',
+				zIndex: 2000,
+				revert: false,
+				scroll: false,
+				copy: false,
+				delay: 0,
+				containment: 'parent'
+			});
+		}
+	});
+};

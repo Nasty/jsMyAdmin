@@ -16,6 +16,7 @@
   <link rel="stylesheet/less" type="text/css" href="style/styles.less">
 
   <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.ui.js"></script>
   <script type="text/javascript" src="js/jquery.accordion.js"></script>
   <script type="text/javascript" src="js/start.js"></script>
   <script type="text/javascript" src="js/jquery.tablesort.js"></script>
@@ -87,12 +88,16 @@
 			<a href="#" class="inactive" id="showStructure" data-content="show_structure">Struktur</a>
 			<a href="#" class="inactive" id="showStructure" data-content="show_sql">SQL</a>
 			<a href="#" class="inactive" id="showStructure" data-content="show_search">Suche</a>
+			<a href="#" class="hidden" id="showDesign" data-content="show_design">Design</a>
 		</nav>
 		
 		<div id="show_table" data-role="data-container" style="display: none;"></div>
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
 		<div id="show_sql" data-role="container" style="display: none;">SQL</div>
 		<div id="show_search" data-role="container" style="display: none;">Suche</div>
+		<div id="show_design" data-role="container" style="display: none;">
+			
+		</div>
 			
 			<div id="quicksearch">
 				<h4>

@@ -229,4 +229,35 @@ class Service_Core
 		
 		return $this->serviceResult->format();
     }
+    
+    public function getDesignData($params)
+    {
+    	if(!isset($params['db']))
+		{
+			die();
+		}
+		
+		$this->db->setDatabase($params['db']);
+		$data = $this->selectDatabase($params);
+		
+		$result = array();
+		
+		foreach($data['data'] as $table)
+		{
+			$params['table'] = $table['name'];
+			$tableData = $this->selectTable($params);
+			
+			$result[$table['name']] = $tableData['data'];
+		}
+		
+		//print_r($result);
+		//die();
+		if (count($result) > 0)
+		{
+			$this->serviceResult->setData($result);
+		}
+		$this->serviceResult->setInfo(count($result), 'count');
+		
+		return $this->serviceResult->format();
+    }
 }

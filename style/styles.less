@@ -197,6 +197,7 @@ header {
 		  border: 1px dotted #bbb;
 		}
 		
+		
 		tbody tr:nth-child(odd) {
 			background: #ddd;
 		}
@@ -213,7 +214,7 @@ header {
 	}
 }
 
-#content #show_table, #content #show_structure, #content #show_sql, #content #show_search {
+#content #show_table, #content #show_structure, #content #show_sql, #content #show_search, #show_design {
 	position: absolute;
 	top: 55px;
 	bottom: 10px;
@@ -445,4 +446,25 @@ nav {
 	height: 100%;
 	overflow: hidden;
 	z-index: 998;
+}
+
+#show_design {
+	margin-bottom: 10px;
+	border: 1px solid black;
+
+	.table {
+		position: absolute;
+		border: 1px solid black;
+		min-width: 100px;
+		padding: 0px 3px;
+		font-size: 0.8em;
+	}
+	
+	p {
+		font-weight: bold;
+	}
+	
+	ul {
+		list-style-type: none;
+	}
 }
