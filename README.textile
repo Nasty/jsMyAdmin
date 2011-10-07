@@ -1,0 +1,28 @@
+h1. Main
+
+Like the name suggests jsMyAdmin  is similar to "phpMyAdmin".
+It's primary prupose is to access, maintain and manage databases and their respective contents.
+Unlike phpMyAdmin, jsMyAdmin is heavily based on javaScript (hence the name jsMyAdmin), in particular the jQuery framwork, to provide a very modern and comfortable interface for the user.
+
+It is not meant to replace phpMyAdmin, but more of,  to be a very stylish and modern alternative to it - with, hopefully in the future quite some handy functions you won't find in PMA. 
+
+h1. Features
+
+* AJAX ( & jQuery) driven database access similar to phpMyAdmin
+* more to come :)
+
+h1. Requirements
+
+* PHP enabled webserver
+* HTML 5 capable browser
+
+h1. Status
+
+Still in (very) early developement phase, basic database access and table operations are working already.
+First UI draft is completed.
+
+h1. Thanks to 
+* "Logsol for WebService Framework used in here":https://github.com/logsol/WebService-Framework
+* "Logsol for database class used in his MVC Framework":https://github.com/logsol/Katharsis-Framework
+* "fgnass for spin.js, a pure javascript spinner animation":https://github.com/fgnass/spin.js
+* "jQuery":https://github.com/jquery/jquery
