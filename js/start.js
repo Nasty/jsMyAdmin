@@ -63,7 +63,12 @@ function getDatabases ()
 	    	$('#spinner').hide();
 	    	
 	    	$('#quicksearch').find('h4').find('span').removeClass('active');
-	    }
+	    },
+		statusCode: {
+			403: function () {
+				relogin(this);
+			}
+		}
 	});
 };
 
@@ -123,8 +128,12 @@ function getTables (elem)
 			$('#spinner').hide();
 			
 			$('#quicksearch').find('h4').find('span').removeClass('active');
+		},
+		statusCode: {
+			403: function () {
+				relogin(this);
+			}
 		}
-
 	});
 };
 
@@ -170,6 +179,11 @@ function selectTable (elem)
 			$('#spinner').hide();
 			
 			$('#quicksearch').find('h4').find('span').removeClass('active');
+		},
+		statusCode: {
+			403: function () {
+				relogin(this);
+			}
 		}
 	});
 };
