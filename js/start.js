@@ -424,7 +424,7 @@ function showPopup (e, elem)
 				"top" : pageY-$('#' + elem).offset().top+15
 				});
 		};
-	})
+	});
 	popup.appendTo(caller).delay(500).show(250, function(){
 		$(document).unbind('mousemove');
 	});	
@@ -531,9 +531,9 @@ $(document).ready(function()
 								{
 									tableBody += '<td data-size="' + value + '">' + value + '</td>';
 								}
-							})
+							});
 							$('#content #show_table table tbody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
-						})
+						});
 						if (parseInt(msg.info.count) == parseInt(msg.info.last))
 						{
 							$('#content #show_table table ~ a').remove();
@@ -545,9 +545,9 @@ $(document).ready(function()
 						$('#spinner').hide();
 						options.queryInProgress = false;
 					}
-				})
+				});
 				e.preventDefault();
-			})
+			});
 			
 			$('nav a[class!="inactive"]').live('click', function(e){
 				$('nav a ').removeClass('active');
@@ -555,17 +555,17 @@ $(document).ready(function()
 				//$('#content div[id!="head"]').hide().removeClass('active');
 				$('nav a ').each(function(i){
 					$('#' + $(this).attr('data-content')).hide().removeClass('active');
-				})
+				});
 				$('#' + $(this).attr('data-content')).show();
 				e.preventDefault();
 				return false;
-			})
+			});
 			
 			$('.showMore').live('click', function(e){
 				$(this).prev().toggle(300);
 				e.preventDefault();
 				return false;
-			})
+			});
 			
 
 			
