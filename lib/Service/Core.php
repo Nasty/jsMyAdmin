@@ -72,9 +72,11 @@ class Service_Core
 			die();
 		}
 		
-		$statement = "SELECT * FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = '" . $params['db'] . "' AND TABLE_NAME = '" . $params['table'] . "';";
+		$statement = "SELECT * FROM information_schema.COLUMNS " . 
+			//	"LEFT JOIN KEY_COLUMN_USAGE ON COLUMNS.TABLE_NAME=KEY_COLUMN_USAGE.TABLE_NAME " .
+				"WHERE COLUMNS.TABLE_SCHEMA = '" . $params['db'] . "' AND COLUMNS.TABLE_NAME = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
-
+		//die(var_dump($result));
 		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
@@ -96,6 +98,8 @@ class Service_Core
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
 				$table['index'] = $row['COLUMN_KEY'];
+			//	$table['referenced_table'] = $row['KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME'];
+			//	$table['referenced_column'] = $row['KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME'];
 				$tables[] = $table;
 			}
 			$this->serviceResult->setData($tables);
