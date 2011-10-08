@@ -88,16 +88,16 @@ class Service_Core
 			foreach ($result as $row)
 			{
 				$table = array();
-				$table['field'] = $row['COLUMNS.COLUMN_NAME'];
-				$table['type'] = $row['COLUMS.COLUMN_TYPE'];
-				$table['collation'] = $row['COLUMNS.COLLATION_NAME'];
-				$table['attribute'] = $row['COLUMNS.DATA_TYPE'];
-				$table['null'] = $row['COLUMNS.IS_NULLABLE'];
+				$table['field'] = $row['COLUMN_NAME'];
+				$table['type'] = $row['COLUMN_TYPE'];
+				$table['collation'] = $row['COLLATION_NAME'];
+				$table['attribute'] = $row['DATA_TYPE'];
+				$table['null'] = $row['IS_NULLABLE'];
 				//$table['key'] = $row['COLLATION_NAME'] == null ? '---' : $row['COLLATION_NAME'];
-				$table['default'] = $row['COLUMNS.COLUMN_DEFAULT'];
-				$table['extra'] = $row['COLUMNS.EXTRA'];
+				$table['default'] = $row['COLUMN_DEFAULT'];
+				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
-				$table['index'] = $row['COLUMNS.COLUMN_KEY'];
+				$table['index'] = $row['COLUMN_KEY'];
 			//	$table['referenced_table'] = $row['KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME'];
 			//	$table['referenced_column'] = $row['KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME'];
 				$tables[] = $table;
