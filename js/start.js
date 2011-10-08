@@ -647,6 +647,15 @@ function getDesignData ()
 					var listItem = $('<li>', {
 						"text" : data['result']['data'][i][j]['field']
 					}).appendTo(list);
+					
+					if(data['result']['data'][i][j]['index'] == 'PRI')
+					{
+						listItem.addClass('primaryKey');
+					}
+					if(data['result']['data'][i][j]['index'] == 'MUL')
+					{
+						listItem.addClass('indexKey');
+					}
 		    	}
 				
 	    		$('#show_design').append(table);
@@ -655,7 +664,7 @@ function getDesignData ()
 			$('#show_design .table').draggable(
 			{
 				draggable: true,
-				opacity: 0.5,
+				opacity: 0.8,
 				cursor: 'crosshair',
 				zIndex: 2000,
 				revert: false,

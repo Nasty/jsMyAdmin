@@ -95,6 +95,7 @@ class Service_Core
 				$table['default'] = $row['COLUMN_DEFAULT'];
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
+				$table['index'] = $row['COLUMN_KEY'];
 				$tables[] = $table;
 			}
 			$this->serviceResult->setData($tables);

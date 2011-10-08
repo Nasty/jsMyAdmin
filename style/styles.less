@@ -458,13 +458,33 @@ nav {
 		min-width: 100px;
 		padding: 0px 3px;
 		font-size: 0.8em;
+		background: #ffffff;
 	}
 	
 	p {
 		font-weight: bold;
+		border-bottom: 1px solid black;
 	}
 	
 	ul {
+		.primaryKey {
+			background: url('../img/primary-key.gif') center left no-repeat;
+		}
+		
+		.indexKey {
+			background: url('../img/index-key.gif') center left no-repeat;
+		}
+
 		list-style-type: none;
+	}
+	
+	li {
+	
+		padding-left: 10px;
+		border-bottom: 1px dotted #999999; 
+		
+		&:last-of-type {
+			border: none;
+		}	
 	}
 }
