@@ -72,9 +72,9 @@ class Service_Core
 			die();
 		}
 		
-		$statement = "SELECT `COLUMNS`.*, `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME`, `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` " . 
+		$statement = "SELECT `COLUMNS`.* " . 
 				"FROM `information_schema`.`COLUMNS` " . 
-				"LEFT JOIN `information_schema`.`KEY_COLUMN_USAGE` ON `COLUMNS`.`TABLE_NAME` = `KEY_COLUMN_USAGE`.`TABLE_NAME` " .
+		//		"LEFT JOIN `information_schema`.`KEY_COLUMN_USAGE` ON `COLUMNS`.`TABLE_NAME` = `KEY_COLUMN_USAGE`.`TABLE_NAME` " .
 				"WHERE `COLUMNS`.`TABLE_SCHEMA` = '" . $params['db'] . "' AND `COLUMNS`.`TABLE_NAME` = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
 		
@@ -100,12 +100,25 @@ class Service_Core
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
 				$table['index'] = $row['COLUMN_KEY'];
-				$table['referenced_table'] = $row['REFERENCED_TABLE_NAME'];
-				$table['referenced_column'] = $row['REFERENCED_COLUMN_NAME'];
-				$tables[] = $table;
+				$keys[$row['COLUMN_NAME']]['referenced_table'] = '';
+				$keys[$row['COLUMN_NAME']]['referenced_column'] = '';
 				
-				$keys[$row['COLUMN_NAME']]['referenced_table'] = $row['REFERENCED_TABLE_NAME'];
-				$keys[$row['COLUMN_NAME']]['referenced_column'] = $row['REFERENCED_COLUMN_NAME'];
+				if ($row['COLUMN_KEY'] && $row['COLUMN_KEY'] == 'MUL')
+				{
+					$getKeyStatement = "SELECT `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME`, `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` " . 
+										"FROM `KEY_COLUMN_USAGE` " . 
+										"WHERE `KEY_COLUMN_USAGE`.`TABLE_SCHEMA` = '" . $params['db'] . "' " . 
+										"AND `KEY_COLUMN_USAGE`.`TABLE_NAME` = '" . $params['table'] . "' " . 
+										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "';";
+					$keyTemp = $this->db->fetchAll($getKeyStatement);
+					
+					if ($keyTemp)
+					{
+						$keys[$row['COLUMN_NAME']]['referenced_table'] = $keyTemp['REFERENCED_TABLE_NAME'];
+						$keys[$row['COLUMN_NAME']]['referenced_column'] = $keyTemp['REFERENCED_COLUMN_NAME'];
+					}
+				}
+				$tables[] = $table;
 			}
 			$this->serviceResult->setData($tables);
 			$this->serviceResult->setHeader($keys, 'keys');
