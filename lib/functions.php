@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (!isset ($_COOKIE[ini_get('session.name')]))
+{
+	session_start();
+}
 function ConnectDb()
 {
 	try
