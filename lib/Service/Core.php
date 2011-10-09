@@ -105,12 +105,13 @@ class Service_Core
 				
 				if ($row['COLUMN_KEY'] && $row['COLUMN_KEY'] == 'MUL')
 				{
-					$getKeyStatement = "SELECT `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME`, `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` " . 
+					$this->db->setDatabase('information_schema');
+					$getKeyStatement = "SELECT `REFERENCED_TABLE_NAME`, `REFERENCED_COLUMN_NAME` " . 
 										"FROM `KEY_COLUMN_USAGE` " . 
 										"WHERE `KEY_COLUMN_USAGE`.`TABLE_SCHEMA` = '" . $params['db'] . "' " . 
 										"AND `KEY_COLUMN_USAGE`.`TABLE_NAME` = '" . $params['table'] . "' " . 
 										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "';";
-					$keyTemp = $this->db->fetchAll($getKeyStatement);
+					$keyTemp = $this->db->fetchOne($getKeyStatement);
 					
 					if ($keyTemp)
 					{
