@@ -133,10 +133,8 @@ class Service_Core
 		{
 			die();
 		}
-		$this->db->setDatabase($params['db']);
 		$serviceResult = new Service_Result();
 		$data = $this->selectTable($params);
-
 		$lengthArray = array();
 		$columns = "";
 		$headers = array();
@@ -176,6 +174,7 @@ class Service_Core
 					 "FROM `" . $params['table'] . "` " .
 					 "ORDER BY 1 " .
 					 "LIMIT " . $offset . " , " . $limit;
+		$this->db->setDatabase($params['db']);
 		$result = $this->db->fetchAll($statement);
 		
 		if ($result)
