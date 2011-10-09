@@ -628,10 +628,21 @@ function getDesignData ()
 			$('#content #show_design').fadeIn(animationSpeed);
 			$('#spinner').hide();
 			
+			var canvas = $('<canvas>', {
+				"id" : "stage"
+			}).css({
+				"position" : "absolute",
+				"height" : $('#show_design').height(),
+				"width" : $('#show_design').width(),
+			});
+			
+			$('#show_design').append(canvas);
+			
 			for(i in  data['result']['data'])
 	    	{
 				var table = $('<div>', {
-	    			"class" : "table"
+	    			"class" : "table",
+	    			"data-name" : i
 	    		});
 				
 				var tableName = $('<p>', {
@@ -644,8 +655,17 @@ function getDesignData ()
 				
 				for(j in  data['result']['data'][i])
 		    	{
+					var fieldName = data['result']['data'][i][j]['field'];
+					var referencedTable = data['result']['header']['keys'][i][fieldName]['referenced_table'];
+					var referencedColumn = data['result']['header']['keys'][i][fieldName]['referenced_column'];
 					var listItem = $('<li>', {
-						"text" : data['result']['data'][i][j]['field']
+						"text" : fieldName,
+						"data-ref-table" : referencedTable,
+						"data-ref-column" : referencedColumn,
+					}).hover(function(){
+						$('#show_design').find('div[data-name="' + referencedTable + '"]').addClass('referenced');
+					}, function(){
+						$('#show_design').find('div[data-name="' + referencedTable + '"]').removeClass('referenced');
 					}).appendTo(list);
 					
 					if(data['result']['data'][i][j]['index'] == 'PRI')
@@ -676,3 +696,14 @@ function getDesignData ()
 		}
 	});
 };
+
+function drawTableConnections ()
+{
+    var canvas = document.getElementById("stage");
+    var context = canvas.getContext("2d");
+    
+    context.moveTo(100, 150);
+    context.lineTo(450, 50);
+    context.lineWidth = 1;
+    context.stroke();
+}

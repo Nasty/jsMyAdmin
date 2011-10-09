@@ -72,18 +72,19 @@ class Service_Core
 			die();
 		}
 		
-		$statement = "SELECT * FROM information_schema.COLUMNS " . 
-			//	"LEFT JOIN KEY_COLUMN_USAGE ON COLUMNS.TABLE_NAME=KEY_COLUMN_USAGE.TABLE_NAME " .
-				"WHERE COLUMNS.TABLE_SCHEMA = '" . $params['db'] . "' AND COLUMNS.TABLE_NAME = '" . $params['table'] . "';";
+		$statement = "SELECT `COLUMNS`.*, `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME`, `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` " . 
+				"FROM `information_schema`.`COLUMNS` " . 
+				"LEFT JOIN `information_schema`.`KEY_COLUMN_USAGE` ON `COLUMNS`.`TABLE_NAME` = `KEY_COLUMN_USAGE`.`TABLE_NAME` " .
+				"WHERE `COLUMNS`.`TABLE_SCHEMA` = '" . $params['db'] . "' AND `COLUMNS`.`TABLE_NAME` = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
-		//test //asd
-		//die(var_dump($result));
+		
 		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
 
 		$table = array();
 		$tables = array();
+		$keys = array();
 		if ($count > 0)
 		{
 			foreach ($result as $row)
@@ -99,11 +100,15 @@ class Service_Core
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
 				$table['index'] = $row['COLUMN_KEY'];
-			//	$table['referenced_table'] = $row['KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME'];
-			//	$table['referenced_column'] = $row['KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME'];
+				$table['referenced_table'] = $row['REFERENCED_TABLE_NAME'];
+				$table['referenced_column'] = $row['REFERENCED_COLUMN_NAME'];
 				$tables[] = $table;
+				
+				$keys[$row['COLUMN_NAME']]['referenced_table'] = $row['REFERENCED_TABLE_NAME'];
+				$keys[$row['COLUMN_NAME']]['referenced_column'] = $row['REFERENCED_COLUMN_NAME'];
 			}
 			$this->serviceResult->setData($tables);
+			$this->serviceResult->setHeader($keys, 'keys');
 		}
 		return $this->serviceResult->format();
     }
@@ -249,6 +254,7 @@ class Service_Core
 		$data = $this->selectDatabase($params);
 		
 		$result = array();
+		$keys = array();
 		
 		foreach($data['data'] as $table)
 		{
@@ -256,12 +262,14 @@ class Service_Core
 			$tableData = $this->selectTable($params);
 			
 			$result[$table['name']] = $tableData['data'];
+			$keys[$table['name']] = $tableData['header']['keys'];
 		}
 		
-		//print_r($result);
-		//die();
+//		print_r($keys);
+//		die();
 		if (count($result) > 0)
 		{
+			$this->serviceResult->setHeader($keys, 'keys');
 			$this->serviceResult->setData($result);
 		}
 		$this->serviceResult->setInfo(count($result), 'count');
