@@ -159,33 +159,35 @@ class Service_Core
 					 "LIMIT " . $offset . " , " . $limit;
 		$result = $this->db->fetchAll($statement);
 		
-
-		$data = array();
-		$tables = array();
-		foreach ($result as $row)
+		if ($result)
 		{
 			$data = array();
-			foreach ($row as $key => $value)
+			$tables = array();
+			foreach ($result as $row)
 			{
-				if(in_array($key, $lengthArray))
+				$data = array();
+				foreach ($row as $key => $value)
 				{
-					$data[$key] = MakeSize($value);
+					if(in_array($key, $lengthArray))
+					{
+						$data[$key] = MakeSize($value);
+					}
+					else 
+					{
+						$data[$key] = utf8_encode($value);	
+					}
 				}
-				else 
-				{
-					$data[$key] = utf8_encode($value);	
-				}
+				$tables['data'][] = $data;
 			}
-			$tables['data'][] = $data;
+			
+			$serviceResult->setData($tables['data']);
+			$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
 		}
-		
-		$serviceResult->setData($tables['data']);
 
 		$statement = "SELECT COUNT(*) AS count FROM `" . $params['table'] . "`";
 		$count = $this->db->fetchOne($statement);
 
 		$serviceResult->setInfo($count['count'], 'count');
-		$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
 		$serviceResult->setInfo($offset, 'offset');
 		$serviceResult->setInfo($limit, 'limit');
 		
