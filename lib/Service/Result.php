@@ -33,7 +33,8 @@ class Service_Result
 	{
 		if (is_array($head))
 		{
-			array_walk($head, 'utf8_encode');
+			//throws E-WARNING since utf8_encode expects only 1 param, but array_walk gives 2... fixit
+			@array_walk($head, 'utf8_encode');
 		}
 		if ($key)
 		{
@@ -73,7 +74,8 @@ class Service_Result
 	{
 		if (is_array($info))
 		{
-			array_walk($info, 'utf8_encode');
+			//throws E-WARNING since utf8_encode expects only 1 param, but array_walk gives 2... fixit
+			@array_walk($info, 'utf8_encode');
 		}
 		if ($key)
 		{
