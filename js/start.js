@@ -660,13 +660,22 @@ function getDesignData ()
 					var referencedColumn = data['result']['header']['keys'][i][fieldName]['referenced_column'];
 					var listItem = $('<li>', {
 						"text" : fieldName,
-						"data-ref-table" : referencedTable,
-						"data-ref-column" : referencedColumn,
-					}).hover(function(){
-						$('#show_design').find('div[data-name="' + referencedTable + '"]').addClass('referenced');
-					}, function(){
-						$('#show_design').find('div[data-name="' + referencedTable + '"]').removeClass('referenced');
-					}).appendTo(list);
+						"data-name": fieldName
+					}).data({"column-name": fieldName}).appendTo(list);
+					if (referencedTable != null && referencedColumn != null)
+					{
+						listItem.data({"ref-table": referencedTable, "ref-column": referencedColumn})
+							.hover(function(){
+								$('#show_design').find('div[data-name="' + $(this).data("ref-table") + '"]').addClass('referenced');
+								$('#show_design').find('div[data-name="' + $(this).data("ref-table") + '"]').find('li:contains("' + $(this).data("ref-column") + '")').addClass('referenced');
+								$(this).addClass('referenced');
+							}, function(){
+								$('#show_design').find('div[data-name="' + $(this).data("ref-table") + '"]').removeClass('referenced')
+									.find('li:contains("' + $(this).data("ref-column") + '")').removeClass('referenced');
+								$(this).removeClass('referenced');
+							})
+					}
+					
 					
 					if(data['result']['data'][i][j]['index'] == 'PRI')
 					{

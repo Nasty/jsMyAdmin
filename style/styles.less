@@ -462,6 +462,10 @@ nav {
 		background: #ffffff;
 		display: inline-block;
 		margin: 10px;
+		
+		&.referenced {
+			outline: 2px solid @color1;
+		}
 	}
 	
 	p {
@@ -489,5 +493,8 @@ nav {
 		&:last-of-type {
 			border: none;
 		}	
+		&.referenced {
+			color: @color1;
+		}
 	}
 }

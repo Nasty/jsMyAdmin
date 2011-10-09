@@ -100,8 +100,8 @@ class Service_Core
 				$table['extra'] = $row['EXTRA'];
 				$table['aktion'] = ''; //?
 				$table['index'] = $row['COLUMN_KEY'];
-				$keys[$row['COLUMN_NAME']]['referenced_table'] = '';
-				$keys[$row['COLUMN_NAME']]['referenced_column'] = '';
+				$keys[$row['COLUMN_NAME']]['referenced_table'] = null;
+				$keys[$row['COLUMN_NAME']]['referenced_column'] = null;
 				
 				if ($row['COLUMN_KEY'] && $row['COLUMN_KEY'] == 'MUL')
 				{
