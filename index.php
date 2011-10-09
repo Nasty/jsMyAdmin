@@ -59,11 +59,11 @@
 			jsMyAdmin
 		</div>
 		<a href="logout.php" class="button" id="logout">Logout</a>
-		<div id="loggedIn" class="button">Eingeloggt als: <?php echo $_SESSION['user']; ?>
+		<div id="loggedIn" class="button">Loggen in as: <?php echo $_SESSION['user']; ?>
 			<div>
 				<br />
-				seit <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> Uhr<br />
-				Letzte Aktion: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> Uhr
+				since <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> <br />
+				last action: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> 
 			</div>
 		</div>
 		<br class="cleardiv" />
@@ -84,10 +84,10 @@
     <div id="content">
 		<h3 id="path"><span style="float:left;"></span></h3>
 		<nav>
-			<a href="#" class="inactive" id="showTable" data-content="show_table">Anzeigen</a>
-			<a href="#" class="inactive" id="showStructure" data-content="show_structure">Struktur</a>
+			<a href="#" class="inactive" id="showTable" data-content="show_table">Show</a>
+			<a href="#" class="inactive" id="showStructure" data-content="show_structure">Structure</a>
 			<a href="#" class="inactive" id="showStructure" data-content="show_sql">SQL</a>
-			<a href="#" class="inactive" id="showStructure" data-content="show_search">Suche</a>
+			<a href="#" class="inactive" id="showStructure" data-content="show_search">Search</a>
 			<a href="#" class="hidden" id="showDesign" data-content="show_design">Design</a>
 		</nav>
 		
@@ -95,9 +95,7 @@
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
 		<div id="show_sql" data-role="container" style="display: none;">SQL</div>
 		<div id="show_search" data-role="container" style="display: none;">Suche</div>
-		<div id="show_design" data-role="container" style="display: none;">
-			
-		</div>
+		<div id="show_design" data-role="container" style="display: none;"></div>
 			
 			<div id="quicksearch">
 				<h4>
