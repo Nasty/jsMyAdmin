@@ -76,7 +76,7 @@ class Service_Core
 			//	"LEFT JOIN KEY_COLUMN_USAGE ON COLUMNS.TABLE_NAME=KEY_COLUMN_USAGE.TABLE_NAME " .
 				"WHERE COLUMNS.TABLE_SCHEMA = '" . $params['db'] . "' AND COLUMNS.TABLE_NAME = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
-		//test
+		//test //asd
 		//die(var_dump($result));
 		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'), 'cols');
 		$count = count($result);
