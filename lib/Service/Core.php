@@ -103,16 +103,17 @@ class Service_Core
 				$keys[$row['COLUMN_NAME']]['referenced_table'] = null;
 				$keys[$row['COLUMN_NAME']]['referenced_column'] = null;
 				
-				if ($row['COLUMN_KEY'] && $row['COLUMN_KEY'] == 'MUL')
+				if ($row['COLUMN_KEY'] /*&& $row['COLUMN_KEY'] == 'MUL'*/)
 				{
 					$this->db->setDatabase('information_schema');
 					$getKeyStatement = "SELECT `REFERENCED_TABLE_NAME`, `REFERENCED_COLUMN_NAME` " . 
 										"FROM `KEY_COLUMN_USAGE` " . 
 										"WHERE `KEY_COLUMN_USAGE`.`TABLE_SCHEMA` = '" . $params['db'] . "' " . 
 										"AND `KEY_COLUMN_USAGE`.`TABLE_NAME` = '" . $params['table'] . "' " . 
-										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "';";
+										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "' " . 
+										"AND `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME` IS NOT NULL " . 
+										"AND `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` IS NOT NULL;";
 					$keyTemp = $this->db->fetchOne($getKeyStatement);
-					
 					if ($keyTemp)
 					{
 						$keys[$row['COLUMN_NAME']]['referenced_table'] = $keyTemp['REFERENCED_TABLE_NAME'];
