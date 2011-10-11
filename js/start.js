@@ -491,6 +491,20 @@ $(document).ready(function()
 		$(this).find('.triangle-isosceles').remove();
 	});
 	/*-----------*/
+	
+	$('#submitQuery').click(function(e){
+		e.preventDefault();
+		$.ajax({
+			url: "service.php?cmd=executeQuery&mode=json",
+			global: false,
+			type: "POST",
+			async:true,
+			data: {query: $('#sqlQuery').val(), db:options.selectedDb},
+			success: function(msg){
+				console.log(msg);
+			}
+		})
+	})
 			
 			
 			

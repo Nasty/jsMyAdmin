@@ -290,4 +290,15 @@ class Service_Core
 		
 		return $this->serviceResult->format();
     }
+	
+	public function executeQuery ($params)
+	{
+		if (!isset($params['db']))
+		{
+			die();
+		}
+		
+		$this->db->setDatabase($params['db']);
+		$result = $this->db->fetchAll($params['query']);
+	}
 }

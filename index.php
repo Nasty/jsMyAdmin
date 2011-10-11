@@ -93,7 +93,10 @@
 		
 		<div id="show_table" data-role="data-container" style="display: none;"></div>
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
-		<div id="show_sql" data-role="container" style="display: none;">SQL</div>
+		<div id="show_sql" data-role="container" style="display: none;">
+			<textarea id="sqlQuery" cols="70" rows="30" style="border: 1px solid #000;"></textarea><br />
+			<input type="button" id="submitQuery" value="abschicken (keine Selects)"  style="border: 1px solid #000;" />
+		</div>
 		<div id="show_search" data-role="container" style="display: none;">Suche</div>
 		<div id="show_design" data-role="container" style="display: none;"></div>
 			
