@@ -459,9 +459,25 @@ $(document).ready(function()
 		getTables(e);
 	});
 	
-	$('#selector #tables li').live('click', function(e)
+	$('#selector #tables li').live('mousedown', function(e)
 	{
-		selectTable(e);
+		switch (e.which)
+		{
+			case 2:
+				console.log('middle');
+				e.preventDefault();
+				break;
+			case 3:
+				console.log('right');
+				break;
+			case 1:
+				//omitted
+			default:
+				console.log('left');
+				selectTable(e);
+				e.preventDefault();
+				break;
+		}
 	});
 	
 	$('#showTable').live('click', function(e){
