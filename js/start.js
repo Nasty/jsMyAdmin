@@ -430,6 +430,9 @@ function showPopup (e, elem)
 	});	
 }
 
+function getExportData(elem)
+{
+}
 
 $(document).ready(function()
 {     
@@ -486,6 +489,10 @@ $(document).ready(function()
 
 	$('#showDesign').live('click', function(e){
 		getDesignData(e);
+	});
+	
+	$('#showExport').live('click', function(e){
+		getExportData(e);
 	});
 	
 	/*$('#quicksearch').find('h4').find('span').toggle(function(){

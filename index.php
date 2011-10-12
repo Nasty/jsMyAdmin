@@ -63,7 +63,7 @@
 			<div>
 				<br />
 				since <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> <br />
-				last action: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?> 
+				last action: <?php echo date('d.m.Y H:i:s', $_SESSION['lastAction']); ?>
 			</div>
 		</div>
 		<br class="cleardiv" />
@@ -88,9 +88,10 @@
 			<a href="#" class="inactive" id="showStructure" data-content="show_structure">Structure</a>
 			<a href="#" class="inactive" id="showStructure" data-content="show_sql">SQL</a>
 			<a href="#" class="inactive" id="showStructure" data-content="show_search">Search</a>
+			<a href="#" class="inactive" id="showExport" data-content="show_export">Export</a>
 			<a href="#" class="hidden" id="showDesign" data-content="show_design">Design</a>
 		</nav>
-		
+
 		<div id="show_table" data-role="data-container" style="display: none;"></div>
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
 		<div id="show_sql" data-role="container" style="display: none;">
@@ -98,23 +99,24 @@
 			<input type="button" id="submitQuery" value="abschicken (keine Selects)"  style="border: 1px solid #000;" />
 		</div>
 		<div id="show_search" data-role="container" style="display: none;">Suche</div>
+		<div id="show_export" data-role="container" style="display: none;">Export</div>
 		<div id="show_design" data-role="container" style="display: none;"></div>
-			
+
 			<div id="quicksearch">
 				<h4>
 					<span>Quicksearch</span>
 				</h4>
 				<div>
 					<form action="service.php?cmd=qsearchTable&mode=json" method="POST">
-						
+
 						<ul id="qs_cols">
-						
+
 						</ul>
 						<label><input type="radio" name="qs_type" value="like" />Like</label>
 						<label><input type="radio" name="qs_type" value="equals" />Equals</label>
 						<input type="text" name="qs_search" id="qs_search" />
 						<input type="button" value="search" id="qs_submit" class="button" />
-						
+
 					</form>
 				</div>
 			</div>
