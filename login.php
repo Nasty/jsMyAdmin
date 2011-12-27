@@ -3,7 +3,7 @@ require_once 'lib/functions.php';
 
 if(isset($_POST['user']))
 {
-	$user = mysql_real_escape_string($_POST['user']);
+	$user = mysql_escape_string($_POST['user']);
 }
 else
 {
@@ -13,7 +13,7 @@ else
 
 if(isset($_POST['pw']))
 {
-	$password = mysql_real_escape_string($_POST['pw']);
+	$password = mysql_escape_string($_POST['pw']);
 }
 else
 {
