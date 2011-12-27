@@ -436,7 +436,7 @@ function getExportData(elem)
 
 $(document).ready(function()
 {     
-	$('<div id="spinner">').css({'float':'left', 'marginLeft':'20px', 'marginTop':'8px'}).spin(spinnerOpts).appendTo('#path').hide().after('<br class="clear" />');
+//	$('<div id="spinner">').css({'float':'left', 'marginLeft':'20px', 'marginTop':'8px'}).spin(spinnerOpts).appendTo('#path').hide().after('<br class="clear" />');
 	getDatabases();
 	
 	$('#databaseHeader').next().hide();

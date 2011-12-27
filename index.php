@@ -1,6 +1,6 @@
 <?php
 	session_start ();
-	if ($_SESSION['auth'] !== 'true')
+	if (isset($_SESSION['auth']) && $_SESSION['auth'] !== 'true')
 	{
 		include 'login.html';
 		die();
@@ -20,7 +20,7 @@
   <script type="text/javascript" src="js/jquery.accordion.js"></script>
   <script type="text/javascript" src="js/start.js"></script>
   <script type="text/javascript" src="js/jquery.tablesort.js"></script>
-  <script type="text/javascript" src="js/spin.js"></script>
+  <!-- <script type="text/javascript" src="js/spin.js"></script> -->
   <script type="text/javascript" src="js/less-1.1.3.min.js"></script>
 
  	<script type="text/javascript">
