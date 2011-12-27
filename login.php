@@ -3,7 +3,7 @@ require_once 'lib/functions.php';
 
 if(isset($_POST['user']))
 {
-	$user = mysql_escape_string($_POST['user']);
+	$user = $_POST['user'];
 }
 else
 {
@@ -13,7 +13,7 @@ else
 
 if(isset($_POST['pw']))
 {
-	$password = mysql_escape_string($_POST['pw']);
+	$password = $_POST['pw'];
 }
 else
 {
@@ -29,7 +29,7 @@ $_SESSION['lastAction'] = time();
 
 try
 {
-	ConnectDb();
+	$connection = ConnectDb();
 }
 catch (Exception $e)
 {
