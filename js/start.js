@@ -127,14 +127,19 @@ function getTables (elem)
 			    {
 			    	if($(value).attr('id') != 'searchLi')
 			    	{
+			    		if($(value).attr('id') != 'searchLi')
+			    	{
 			    		if($(value).attr('id').search(searchString) != -1)
 			    		{
+			    			var replace = $(value).attr('id').match(searchString)[0];
 			    			$(value).show();
+			    			$(value).html($(value).attr('id').replace(replace, '<span style="color:#FF4422; font-weight: bold;">' + replace + '</span>'));
 			    		}
 			    		else
 			    		{
 			    			$(value).hide();
 			    		}
+			    	}
 			    	}
 			    });
 			});
