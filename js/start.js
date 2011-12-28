@@ -107,6 +107,39 @@ function getTables (elem)
 			$('#content #head').hide();
 			hideContents();
 			
+			var searchField = $('<input>', {
+				"id" : 'searchField',
+				"type" : 'text',
+				"style" : 'width: 80%; height: 100%; border: 1px solid black;'
+			});
+			
+			var li = $('<li>', {
+				"id" : 'searchLi'
+			});
+			li.append(searchField);
+			$('#selector').find('#tables').append(li);
+			
+			$("#searchField").live('keyup', function(event) {
+			    
+				searchString = $(this).val();
+			    console.log(searchString);
+			    $.each($('#tables li'), function(key, value)
+			    {
+			    	if($(value).attr('id') != 'searchLi')
+			    	{
+			    		if($(value).attr('id').search(searchString) != -1)
+			    		{
+			    			$(value).show();
+			    		}
+			    		else
+			    		{
+			    			$(value).hide();
+			    		}
+			    	}
+			    });
+			});
+
+			
 			if (data.result.info.count > 0)
 			{
 				$.each(data.result.data, function(key,value){
@@ -464,6 +497,12 @@ $(document).ready(function()
 	
 	$('#selector #tables li').live('mousedown', function(e)
 	{
+		if($(e.target).attr('id') == 'searchLi' || $(e.target).attr('id') == 'searchField')
+		{
+			$(e.target).focus();
+			return false
+		}
+
 		switch (e.which)
 		{
 			case 2:
