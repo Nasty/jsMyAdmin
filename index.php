@@ -59,7 +59,7 @@
 			jsMyAdmin
 		</div>
 		<a href="logout.php" class="button" id="logout">Logout</a>
-		<div id="loggedIn" class="button">Loggen in as: <?php echo $_SESSION['user']; ?>
+		<div id="loggedIn" class="button">Logged in as: <?php echo $_SESSION['user']; ?>
 			<div>
 				<br />
 				since <?php echo date('d.m.Y H:i:s', $_SESSION['loginTime']); ?> <br />

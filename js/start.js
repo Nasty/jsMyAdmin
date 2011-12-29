@@ -439,9 +439,9 @@ function showPopup (e, elem)
 	var caller = $(e.target);
 	var popupValue = '';
 	
-	if(caller.val() != null)
+	if(caller.attr('value') != null)
 	{
-		popupValue = caller.val();
+		popupValue = caller.attr('value');
 	}
 	
 	var popup = $('<p>', {
@@ -558,13 +558,13 @@ $(document).ready(function()
 		getExportData(e);
 	});
 	
-	/*$('#quicksearch').find('h4').find('span').toggle(function(){
-		$(this).parent().next().animate({'height': 90},250);
-		$('#content').find('div[data-role="data-container"]').animate({'bottom':122}, 250);
+	$('#quicksearch').find('h4').find('span').toggle(function(){
+		$(this).parent().next().animate({'height': 180},250);
+		$('#content').find('div[data-role="data-container"]').animate({'bottom':202}, 250);
 	},function(){
 		$(this).parent().next().animate({'height': 0},250);
 		$('#content').find('div[data-role="data-container"]').animate({'bottom':22}, 250);
-	});*/
+	});
 	
 	$('#show_table').find('table').find('tr').find('td').live('mouseenter', function(e){
 		showPopup(e, 'show_table');
@@ -604,7 +604,7 @@ $(document).ready(function()
 			
 			
 			$('#loadEntries').live('click', function(e){
-				$('#spinner').show();
+//				$('#spinner').show();
 				$.ajax({
 					url: 'service.php?cmd=showTable&mode=json',
 					type: "POST",
@@ -626,10 +626,10 @@ $(document).ready(function()
 								tableRow = 1 - tableRow;
 								if (options.truncateData > 0 && value.length > options.truncateData)
 								{
-									tableBody += '<td data-size="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
+									tableBody += '<td data-size="' + value + '" value="' + value + '">' + value.substr(0,options.truncateData) + '<span class="hidden">' + value.substr(options.truncateData) + '</span><span class="showMore">&hellip;</span></td>';
 								} else
 								{
-									tableBody += '<td data-size="' + value + '">' + value + '</td>';
+									tableBody += '<td data-size="' + value + '" value="' + value + '">' + value + '</td>';
 								}
 							});
 							$('#content #show_table table tbody').append('<tr class="tableRow' + tableRow + '">' + tableBody + '</tr>');
