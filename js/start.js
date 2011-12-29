@@ -446,7 +446,7 @@ function showPopup (e, elem)
 	
 	var popup = $('<p>', {
 		"class" : "triangle-isosceles",
-		"html" : popupValue
+		"text" : popupValue
 	}).css({
 			'display':'none',
 			'top':e.layerY,
