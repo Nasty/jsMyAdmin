@@ -180,7 +180,7 @@ function getTables (elem)
 function selectTable (elem)
 {
 	$('#showDesign').removeClass('active').addClass('hidden');
-	elem = $(elem.target);
+//	elem = $(elem.target);
 	$('#spinner').show();
 
 	if (elem.parent().attr('id') == 'tables')
@@ -502,9 +502,16 @@ $(document).ready(function()
 	
 	$('#selector #tables li').live('mousedown', function(e)
 	{
-		if($(e.target).attr('id') == 'searchLi' || $(e.target).attr('id') == 'searchField')
+		var elem = $(e.target);
+		
+		if(elem.attr('id') == undefined)
 		{
-			$(e.target).focus();
+			elem = $(e.target).parent();
+		}
+		
+		if(elem.attr('id') == 'searchLi' || elem.attr('id') == 'searchField')
+		{
+			elem.focus();
 			return false
 		}
 
@@ -521,7 +528,7 @@ $(document).ready(function()
 				//omitted
 			default:
 				console.log('left');
-				selectTable(e);
+				selectTable(elem);
 				e.preventDefault();
 				break;
 		}
