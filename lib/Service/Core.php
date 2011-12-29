@@ -10,7 +10,7 @@ class Service_Core
 		$this->db->connect();
 		$this->serviceResult = new Service_Result();
 	}
-	
+
 	public function isConntected ()
 	{
 		if (! $this->db->isConnected() )
@@ -19,7 +19,7 @@ class Service_Core
 			exit();
 		}
 	}
-	
+
     public function getDatabases()
     {
     	$statement = "SHOW DATABASES;";
@@ -27,7 +27,7 @@ class Service_Core
 
     	$this->serviceResult->setData($result);
     	$this->serviceResult->setInfo(count($result), 'count');
-		
+
     	return $this->serviceResult->format();
     }
 
@@ -40,11 +40,11 @@ class Service_Core
 
 		$statement = "SELECT * FROM information_schema.TABLES WHERE TABLE_SCHEMA = '" . $params['db'] . "';";
 		$result = $this->db->fetchAll($statement);
-		 
+
 		$this->serviceResult->setHeader(array('Table', 'Records', 'Type', 'Collation', 'Size'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
-		
+
 		if ($count > 0)
 		{
 			foreach ($result as $row)
@@ -58,7 +58,7 @@ class Service_Core
 			//	$table['realSize'] = $row['DATA_LENGTH'];
 				$tables[] = $table;
 			}
-			
+
 			$this->serviceResult->setData($tables);
 
 		}
@@ -71,14 +71,14 @@ class Service_Core
 		{
 			die();
 		}
-		
-		$statement = "SELECT `COLUMNS`.* " . 
-				"FROM `information_schema`.`COLUMNS` " . 
+
+		$statement = "SELECT `COLUMNS`.* " .
+				"FROM `information_schema`.`COLUMNS` " .
 		//		"LEFT JOIN `information_schema`.`KEY_COLUMN_USAGE` ON `COLUMNS`.`TABLE_NAME` = `KEY_COLUMN_USAGE`.`TABLE_NAME` " .
 				"WHERE `COLUMNS`.`TABLE_SCHEMA` = '" . $params['db'] . "' AND `COLUMNS`.`TABLE_NAME` = '" . $params['table'] . "';";
 		$result = $this->db->fetchAll($statement);
-		
-		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion'), 'cols');
+
+		$this->serviceResult->setHeader(array('Field', 'Type', 'Collation', 'Attribute', 'Null', 'Standard', 'Extra', 'Aktion', 'Indexes'), 'cols');
 		$count = count($result);
 		$this->serviceResult->setInfo($count, 'count');
 
@@ -102,16 +102,16 @@ class Service_Core
 				$table['index'] = $row['COLUMN_KEY'];
 				$keys[$row['COLUMN_NAME']]['referenced_table'] = null;
 				$keys[$row['COLUMN_NAME']]['referenced_column'] = null;
-				
+
 				if ($row['COLUMN_KEY'] /*&& $row['COLUMN_KEY'] == 'MUL'*/)
 				{
 					$this->db->setDatabase('information_schema');
-					$getKeyStatement = "SELECT `REFERENCED_TABLE_NAME`, `REFERENCED_COLUMN_NAME` " . 
-										"FROM `KEY_COLUMN_USAGE` " . 
-										"WHERE `KEY_COLUMN_USAGE`.`TABLE_SCHEMA` = '" . $params['db'] . "' " . 
-										"AND `KEY_COLUMN_USAGE`.`TABLE_NAME` = '" . $params['table'] . "' " . 
-										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "' " . 
-										"AND `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME` IS NOT NULL " . 
+					$getKeyStatement = "SELECT `REFERENCED_TABLE_NAME`, `REFERENCED_COLUMN_NAME` " .
+										"FROM `KEY_COLUMN_USAGE` " .
+										"WHERE `KEY_COLUMN_USAGE`.`TABLE_SCHEMA` = '" . $params['db'] . "' " .
+										"AND `KEY_COLUMN_USAGE`.`TABLE_NAME` = '" . $params['table'] . "' " .
+										"AND `KEY_COLUMN_USAGE`.`COLUMN_NAME` = '" .$row['COLUMN_NAME'] . "' " .
+										"AND `KEY_COLUMN_USAGE`.`REFERENCED_TABLE_NAME` IS NOT NULL " .
 										"AND `KEY_COLUMN_USAGE`.`REFERENCED_COLUMN_NAME` IS NOT NULL;";
 					$keyTemp = $this->db->fetchOne($getKeyStatement);
 					if ($keyTemp)
@@ -170,14 +170,14 @@ class Service_Core
 
 		$offset = isset($params['offset']) ? mysql_escape_string($params['offset']) : 0;
 		$limit = isset($params['limit']) ? mysql_escape_string($params['limit']) : 30;
-		
+
 		$statement = "SELECT " . $columns .
 					 "FROM `" . $params['table'] . "` " .
 					 "ORDER BY 1 " .
 					 "LIMIT " . $offset . " , " . $limit;
 		$this->db->setDatabase($params['db']);
 		$result = $this->db->fetchAll($statement);
-		
+
 		if ($result)
 		{
 			$data = array();
@@ -191,14 +191,14 @@ class Service_Core
 					{
 						$data[$key] = MakeSize($value);
 					}
-					else 
+					else
 					{
-						$data[$key] = utf8_encode($value);	
+						$data[$key] = utf8_encode($value);
 					}
 				}
 				$tables['data'][] = $data;
 			}
-			
+
 			$serviceResult->setData($tables['data']);
 			$serviceResult->setInfo(count($tables['data']) + $offset, 'last');
 		}
@@ -209,10 +209,10 @@ class Service_Core
 		$serviceResult->setInfo($count['count'], 'count');
 		$serviceResult->setInfo($offset, 'offset');
 		$serviceResult->setInfo($limit, 'limit');
-		
+
 		return $serviceResult->format();
     }
-    
+
     public function qsearchTable ($params)
     {
         if(!isset($params['db']) || !isset($params['table']))
@@ -227,9 +227,9 @@ class Service_Core
 			$headers[] = $column['field'];
 		}
 		$this->serviceResult->setHeader($headers, 'cols');
-		
+
 		$statement = "SELECT * ";
-		$statement .= "FROM " . $params['table'] . " WHERE "; 
+		$statement .= "FROM " . $params['table'] . " WHERE ";
 		foreach ($params['fields'] as $field)
 		{
 			$statement .= "`" . $field . "` ";
@@ -243,42 +243,42 @@ class Service_Core
 					break;
 			}
 		}
-		
+
 		$statement = substr($statement, 0, -4) .";";
-		
+
 		$result = $this->db->fetchAll($statement);
-		
+
 		if (count($result) > 0)
 		{
 			$this->serviceResult->setData($result);
 		}
 		$this->serviceResult->setInfo(count($result), 'count');
-		
+
 		return $this->serviceResult->format();
     }
-    
+
     public function getDesignData($params)
     {
     	if(!isset($params['db']))
 		{
 			die();
 		}
-		
+
 		$this->db->setDatabase($params['db']);
 		$data = $this->selectDatabase($params);
-		
+
 		$result = array();
 		$keys = array();
-		
+
 		foreach($data['data'] as $table)
 		{
 			$params['table'] = $table['name'];
 			$tableData = $this->selectTable($params);
-			
+
 			$result[$table['name']] = $tableData['data'];
 			$keys[$table['name']] = $tableData['header']['keys'];
 		}
-		
+
 //		print_r($keys);
 //		die();
 		if (count($result) > 0)
@@ -287,17 +287,17 @@ class Service_Core
 			$this->serviceResult->setData($result);
 		}
 		$this->serviceResult->setInfo(count($result), 'count');
-		
+
 		return $this->serviceResult->format();
     }
-	
+
 	public function executeQuery ($params)
 	{
 		if (!isset($params['db']))
 		{
 			die();
 		}
-		
+
 		$this->db->setDatabase($params['db']);
 		$result = $this->db->fetchAll($params['query']);
 	}

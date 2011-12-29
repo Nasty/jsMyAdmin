@@ -122,8 +122,8 @@ function getTables (elem)
 			$("#searchField").live('keyup', function(event) {
 			    
 				searchString = $(this).val();
-			    console.log(searchString);
-			    $.each($('#tables li'), function(key, value)
+
+				$.each($('#tables li'), function(key, value)
 			    {
 			    	if($(value).attr('id') != 'searchLi')
 			    	{
@@ -343,7 +343,10 @@ function paintData (data, target)
 			{
 				var td = $('<td>', {
 					//TODO : check if blob or size field and use MakeSize here instead of in PHP
-					"text" :   data.data[i][j]
+					// @flo: are u sure? So we had to send ALL image data from the server to the client. 
+					// I think, we should do this in PHP. Text fields or varchar yes.
+					"text" :   limitChars(data.data[i][j]),
+					"value":   data.data[i][j]
 				});
 				row.append(td);
 			};
@@ -434,9 +437,16 @@ function makeSize (size)
 function showPopup (e, elem)
 {
 	var caller = $(e.target);
+	var popupValue = '';
+	
+	if(caller.val() != null)
+	{
+		popupValue = caller.val();
+	}
+	
 	var popup = $('<p>', {
 		"class" : "triangle-isosceles",
-		"text" : "asd"
+		"text" : popupValue
 	}).css({
 			'display':'none',
 			'top':e.layerY
@@ -803,4 +813,14 @@ function drawTableConnections ()
     context.lineTo(450, 50);
     context.lineWidth = 1;
     context.stroke();
+}
+
+function limitChars(string)
+{
+	if(string != null && string.length > 30)
+	{
+		string = string.substring(0, 30) + '...';
+	}
+	
+	return string;
 }
