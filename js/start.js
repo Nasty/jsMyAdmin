@@ -446,10 +446,12 @@ function showPopup (e, elem)
 	
 	var popup = $('<p>', {
 		"class" : "triangle-isosceles",
-		"text" : popupValue
+		"html" : popupValue
 	}).css({
 			'display':'none',
-			'top':e.layerY
+			'top':e.layerY,
+			'float':'left',
+			'white-space': 'normal'
 		});
 	var event = e;
 	$(document).bind('mousemove', function(e){
