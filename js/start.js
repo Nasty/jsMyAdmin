@@ -667,26 +667,33 @@ $(document).ready(function()
 				return false;
 			});
 			
-
-			
-	    	
 	    	if(trigger != null)
 	    	{
-				options.selectedDb = trigger.db;
-				$('#databases #' + trigger.db).trigger('click');
-				//needs work...
-				if (trigger.table != null)
-				{
-					options.selectedTable = trigger.table;
-					$('#tables #' + trigger.table).trigger('click');
-				}
+				setTimeout("TriggerDb()", 200);
 	    	}
 	
 });
 
 
 
+function TriggerDb()
+{
+	$('#databases #' + trigger.db).trigger('click');
+	clearTimeout();
+	//needs work...
+	if (trigger.table != null)
+	{
+		options.selectedDb = trigger.db;
+		setTimeout("TriggerTable()", 500);
+	}
+}
 
+function TriggerTable()
+{
+	console.log(trigger);
+	options.selectedTable = trigger.table;
+	$('#tables #' + trigger.table).trigger('mousedown');
+}
 
 
 
