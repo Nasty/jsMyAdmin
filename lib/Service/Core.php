@@ -193,7 +193,7 @@ class Service_Core
 					}
 					else
 					{
-						$data[$key] = utf8_encode($value);
+						$data[$key] = $value;
 					}
 				}
 				$tables['data'][] = $data;

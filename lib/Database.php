@@ -195,7 +195,7 @@ class Katharsis_Db5
 		{
 			throw new KatharsisDb5_Exception('Could not connect to "' . $this->getHost() . '" with user "' . $this->getUser() . '".');
 		}
-
+		mysql_set_charset('utf8', $this->_connection);
 		$this->_selectDatabase();
 	}
 
