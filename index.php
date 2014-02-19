@@ -9,12 +9,13 @@ if (isset($_SESSION['auth']) && $_SESSION['auth'] !== 'true') {
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>jsMyAdmin</title>
 
-	<link rel="stylesheet/less" type="text/css" href="style/styles.less">
-	<link rel="stylesheet/less" type="text/css" href="style/codemirror.css">
-	<link rel="stylesheet/less" type="text/css" href="style/solarized.css">
+	<link rel="stylesheet/less" type="text/css" href="style/styles.less" />
+	<link rel="stylesheet/less" type="text/css" href="style/codemirror.css" />
+	<link rel="stylesheet/less" type="text/css" href="style/solarized.css" />
+	<link rel="stylesheet/less" type="text/css" href="style/show-hint.css" />
 
 	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery.ui.js"></script>
@@ -152,6 +153,8 @@ if (isset($_SESSION['auth']) && $_SESSION['auth'] !== 'true') {
 	<script src="js/angular-sanitize.min.js"></script>
 	<script src="js/codemirror.js"></script>
 	<script src="js/sql.js"></script>
+	<script src="js/show-hint.js"></script>
+	<script src="js/sql-hint.js"></script>
 	<script src="js/ui-codemirror.min.js"></script>
 	<script src="js/ng-infinite-scroll.min.js"></script>
 	<script src="js/highlight.js"></script>

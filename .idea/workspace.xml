@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="77faa718-ffee-4a24-91e1-4ac54d012646" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/Service/Core.php" afterPath="$PROJECT_DIR$/lib/Service/Core.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/Database.php" afterPath="$PROJECT_DIR$/lib/Database.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/sql.html" afterPath="$PROJECT_DIR$/views/sql.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/controllers/sql.js" afterPath="$PROJECT_DIR$/js/controllers/sql.js" />
     </list>
     <ignored path="jsMyAdmin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,15 +27,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="styles.less" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/style/styles.less">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="4" selection-start="2537" selection-end="2537" vertical-scroll-proportion="-55.625" vertical-offset="0" max-vertical-offset="7725">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="search.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/search.html">
           <provider selected="true" editor-type-id="text-editor">
@@ -54,10 +45,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sql.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="sql.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/controllers/sql.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="7" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="210">
+            <state line="1" column="5" selection-start="30" selection-end="30" vertical-scroll-proportion="0.018181818" vertical-offset="0" max-vertical-offset="825">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tableData.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/tableData.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="3" column="69" selection-start="233" selection-end="250" vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="255">
               <folding />
             </state>
           </provider>
@@ -66,7 +66,7 @@
       <file leaf-file-name="db.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/services/db.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="39" selection-start="1278" selection-end="1291" vertical-scroll-proportion="0.0" vertical-offset="510" max-vertical-offset="1080">
+            <state line="33" column="48" selection-start="1214" selection-end="1236" vertical-scroll-proportion="0.0" vertical-offset="253" max-vertical-offset="1080">
               <folding />
             </state>
           </provider>
@@ -75,7 +75,7 @@
       <file leaf-file-name="sql.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/sql.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1" column="72" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="135">
+            <state line="2" column="38" selection-start="139" selection-end="139" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="150">
               <folding />
             </state>
           </provider>
@@ -118,10 +118,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Core.php" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Core.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/Service/Core.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="195" column="38" selection-start="5884" selection-end="5884" vertical-scroll-proportion="0.90636706" vertical-offset="2199" max-vertical-offset="4650">
+            <state line="195" column="38" selection-start="5884" selection-end="5884" vertical-scroll-proportion="-32.75" vertical-offset="2139" max-vertical-offset="4650">
               <folding />
             </state>
           </provider>
@@ -151,17 +151,17 @@
         <option value="$PROJECT_DIR$/views/tableData.html" />
         <option value="$PROJECT_DIR$/js/controllers/tableData.js" />
         <option value="$PROJECT_DIR$/js/services/db.js" />
-        <option value="$PROJECT_DIR$/views/sql.html" />
-        <option value="$PROJECT_DIR$/js/controllers/sql.js" />
         <option value="$PROJECT_DIR$/js/start.js" />
         <option value="$PROJECT_DIR$/views/export.html" />
         <option value="$PROJECT_DIR$/views/search.html" />
         <option value="$PROJECT_DIR$/views/design.html" />
         <option value="$PROJECT_DIR$/js/controllers/main.js" />
-        <option value="$PROJECT_DIR$/index.php" />
         <option value="$PROJECT_DIR$/style/styles.less" />
         <option value="$PROJECT_DIR$/lib/Database.php" />
         <option value="$PROJECT_DIR$/lib/Service/Core.php" />
+        <option value="$PROJECT_DIR$/index.php" />
+        <option value="$PROJECT_DIR$/views/sql.html" />
+        <option value="$PROJECT_DIR$/js/controllers/sql.js" />
       </list>
     </option>
   </component>
@@ -448,7 +448,9 @@
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="151" column="45" selection-start="5366" selection-end="5366" vertical-scroll-proportion="0.0" vertical-offset="1762" max-vertical-offset="2565">
-          <folding />
+          <folding>
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -532,13 +534,6 @@
         <state line="7" column="53" selection-start="185" selection-end="185" vertical-scroll-proportion="0.13108614" vertical-offset="0" max-vertical-offset="801" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/tableData.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="73" selection-start="254" selection-end="254" vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="255">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/controllers/tableStructure.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="30" selection-start="151" selection-end="151" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
@@ -580,45 +575,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/sql.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5580" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/sql.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="72" selection-start="95" selection-end="95" vertical-scroll-proportion="0.0" vertical-offset="15" max-vertical-offset="135">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/services/db.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="39" selection-start="1278" selection-end="1291" vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="1050">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/controllers/sql.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="7" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="210">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5580">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/design.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="801">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/search.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="801">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/export.html">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="801">
           <folding />
@@ -653,13 +615,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="151" column="45" selection-start="5366" selection-end="5366" vertical-scroll-proportion="-20.958334" vertical-offset="1762" max-vertical-offset="2565">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/Service/Messenger.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="825">
@@ -667,9 +622,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/controllers/main.js">
+    <entry file="file://$PROJECT_DIR$/lib/Service/Core.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="40" selection-start="84" selection-end="84" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
+        <state line="195" column="38" selection-start="5884" selection-end="5884" vertical-scroll-proportion="-32.75" vertical-offset="2139" max-vertical-offset="4650">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Service.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="36" selection-start="445" selection-end="445" vertical-scroll-proportion="-11.125" vertical-offset="63" max-vertical-offset="1425">
           <folding />
         </state>
       </provider>
@@ -691,16 +653,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Service.php">
+    <entry file="file://$PROJECT_DIR$/js/controllers/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="36" selection-start="445" selection-end="445" vertical-scroll-proportion="-11.125" vertical-offset="63" max-vertical-offset="1425">
+        <state line="3" column="40" selection-start="84" selection-end="84" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Service/Core.php">
+    <entry file="file://$PROJECT_DIR$/views/export.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="195" column="38" selection-start="5884" selection-end="5884" vertical-scroll-proportion="0.90636706" vertical-offset="2199" max-vertical-offset="4650">
+        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="801">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/search.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="6" selection-start="6" selection-end="6" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="801">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="4" selection-start="155" selection-end="224" vertical-scroll-proportion="-6.875" vertical-offset="0" max-vertical-offset="2610">
+          <folding>
+            <element signature="n#style#0;n#input#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/sql.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="38" selection-start="139" selection-end="139" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="150">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/services/db.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="48" selection-start="1214" selection-end="1236" vertical-scroll-proportion="0.0" vertical-offset="253" max-vertical-offset="1080">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/tableData.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="69" selection-start="233" selection-end="250" vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="255">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/controllers/sql.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="5" selection-start="30" selection-end="30" vertical-scroll-proportion="0.018181818" vertical-offset="0" max-vertical-offset="825">
           <folding />
         </state>
       </provider>
