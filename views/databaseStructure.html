@@ -1,0 +1,12 @@
+<table>
+	<thead>
+		<tr>
+			<th ng-repeat="(colName,colVal) in data.tables[0]">{{colName}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="row in data.tables">
+			<td ng-repeat="col in row">{{col}}</td>
+		</tr>
+	</tbody>
+</table>

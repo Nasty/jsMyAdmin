@@ -16,7 +16,7 @@ function ConnectDb()
 	}
 	catch (Exception $e)
 	{
-		header("Location: index.php");	
+		header("Location: index.php");
 	}
 
 	return $link;

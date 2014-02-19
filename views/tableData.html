@@ -1,0 +1,12 @@
+<table ng-controller="tableData" infinite-scroll="showTable();" infinite-scroll-distance="5" infinite-scroll-immediate-check="false" infinite-scroll-container="#show_table">
+	<thead>
+		<tr>
+			<th ng-repeat="(colName,colVal) in data.selectedTableData[0]">{{colName}}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="row in data.selectedTableData track by $index">
+			<td ng-repeat="col in row">{{col}}</td>
+		</tr>
+	</tbody>
+</table>

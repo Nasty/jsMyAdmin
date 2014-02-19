@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(E_ALL^E_DEPRECATED);
+
 require_once 'lib/functions.php';
 require_once 'lib/Service.php';
 require_once 'lib/Service/Core.php';
