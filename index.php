@@ -95,6 +95,11 @@
 		<div id="show_table" data-role="data-container" style="display: none;"></div>
 		<div id="show_structure" data-role="data-container" style="display: none;"></div>
 		<div id="show_sql" data-role="container" style="display: none;">
+		
+			<div contenteditable="true" id="testtest" style="border: 1px solid #000; width: 300px; height: 200px;">
+				asd
+			</div>
+		
 			<textarea id="sqlQuery" cols="70" rows="30" style="border: 1px solid #000;"></textarea><br />
 			<input type="button" id="submitQuery" value="abschicken (keine Selects)"  style="border: 1px solid #000;" />
 		</div>
@@ -123,5 +128,49 @@
     </div>
     <div class="clearDiv"><!--  --></div>
   </div>
+  <script>
+  	$(document).ready(function(){
+		$('#testtest').click(function(){
+			var THAT = $(this);
+			$(this).css({'position':'relative', 'zIndex':2, 'background':'transparent'});
+			if (!$(this).next().is('#tempInput'))
+			{
+				var textarea = $('<textarea>', {
+					'id':'tempInput'
+				}).css({
+					'position':'absolute',
+					'left':THAT.position().left,
+					'top':THAT.position().top,
+					'color':'#FFFFFF',
+					'height':THAT.height(),
+					'width':THAT.width(),
+					'zIndex':1
+				}).text(THAT.text().trim()).keyup(function(){
+					var THIS = $(this);
+					var value = THIS.val();
+					var values;
+					var sqlCommands = new Array("SELECT", "UPDATE");
+					console.log(value.charCodeAt(value.length-2));
+					
+					if (value.charCodeAt(value.length-1) == 160)
+					{
+						values = value.trim().split(" ");
+						for (i in values)
+						{
+							if (-1 !== $.inArray(values[i].toUpperCase(), sqlCommands))
+							{
+								values[i] = '<span style="color:#ff0000;">' + values[i].toUpperCase() + '</span>';
+							}
+						}
+						console.log(values.join(" "));
+						THAT.text(values.join(" "));
+					}
+				});
+				$(this).after(textarea);
+			}
+			$(this).next().focus();
+		})
+  	})
+  </script>
 </body>
 </html>
